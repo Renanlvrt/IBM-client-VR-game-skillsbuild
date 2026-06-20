@@ -1,0 +1,56 @@
+using UnityEngine;
+
+public class AdaptiveGlow : MonoBehaviour
+{
+    [Header("Target")]
+    [SerializeField] private Renderer targetRenderer;
+    [SerializeField] private string colorPropertyName = "_EmissionColor";
+
+    [Header("Distance Settings")]
+    [Tooltip("Distance at which the glow is at min intensity (fade out complete).")]
+    [SerializeField] private float minDistance = 5f;
+    [Tooltip("Distance at which the glow is at max intensity (full brightness).")]
+    [SerializeField] private float maxDistance = 20f;
+
+    [Header("Intensity Settings")]
+    [SerializeField] private Color glowColor = Color.cyan;
+    [SerializeField] private float maxIntensity = 2f;
+
+    private Material targetMaterial;
+    private Transform playerTransform;
+
+    private void Awake()
+    {
+        if (targetRenderer == null)
+            targetRenderer = GetComponent<Renderer>();
+
+        if (targetRenderer != null)
+        {
+            // Use material (instanced) to avoid affecting all objects sharing the same material
+            targetMaterial = targetRenderer.material;
+            targetMaterial.EnableKeyword("_EMISSION");
+        }
+
+        if (Camera.main != null)
+            playerTransform = Camera.main.transform;
+    }
+
+    private void Update()
+    {
+        if (playerTransform == null || targetMaterial == null) return;
+
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+
+        // Normalize distance to a 0-1 range based on our min/max
+        // 0 = player is too close (no glow)
+        // 1 = player is far (full glow)
+        float t = Mathf.InverseLerp(minDistance, maxDistance, distance);
+        
+        // Smooth the curve
+        t = Mathf.SmoothStep(0f, 1f, t);
+
+        // Apply intensity
+        Color finalColor = glowColor * (t * maxIntensity);
+        targetMaterial.SetColor(colorPropertyName, finalColor);
+    }
+}

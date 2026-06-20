@@ -1,0 +1,204 @@
+using UnityEngine;
+using UnityEngine.UI;
+using System.Collections.Generic;
+using TMPro;
+
+public class NavigationHUD : MonoBehaviour
+{
+    private static NavigationHUD _instance;
+    public static NavigationHUD Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject go = new GameObject("NavigationHUD");
+                _instance = go.AddComponent<NavigationHUD>();
+            }
+            return _instance;
+        }
+    }
+
+    private class IndicatorUI
+    {
+        public GameObject container;
+        public RectTransform rect;
+        public TextMeshProUGUI arrowText;
+        public TextMeshProUGUI distanceText;
+        public Transform target;
+    }
+
+    private GameObject _hudCanvasGo;
+    private Dictionary<Transform, IndicatorUI> _activeIndicators = new Dictionary<Transform, IndicatorUI>();
+    private Camera _mainCamera;
+
+    [Header("Settings")]
+    public float hudThreshold = 40f; // Doubled for 2x larger world
+    public float edgePadding = 0.05f; // % of screen size
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+        
+        _mainCamera = Camera.main;
+        CreateCanvas();
+    }
+
+    private void CreateCanvas()
+    {
+        _hudCanvasGo = new GameObject("HUDCanvas");
+        _hudCanvasGo.transform.SetParent(this.transform);
+        Canvas canvas = _hudCanvasGo.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        _hudCanvasGo.AddComponent<CanvasScaler>();
+        _hudCanvasGo.AddComponent<GraphicRaycaster>();
+    }
+
+    public void RegisterTarget(Transform target)
+    {
+        if (target == null) return;
+        if (_activeIndicators.ContainsKey(target)) return;
+
+        IndicatorUI ui = new IndicatorUI();
+        ui.target = target;
+        
+        // Use a container for easier placement
+        ui.container = new GameObject("Indicator_" + target.name);
+        ui.container.transform.SetParent(_hudCanvasGo.transform);
+        ui.rect = ui.container.AddComponent<RectTransform>();
+        ui.rect.sizeDelta = new Vector2(100, 100);
+
+        // Arrow Icon (using Text for high-quality vector triangle)
+        GameObject arrowGo = new GameObject("Arrow");
+        arrowGo.transform.SetParent(ui.container.transform);
+        ui.arrowText = arrowGo.AddComponent<TextMeshProUGUI>();
+        ui.arrowText.text = "▲"; // Directional arrow
+        ui.arrowText.fontSize = 30; // Slightly smaller
+        arrowGo.transform.localScale = Vector3.one;
+        ui.arrowText.alignment = TextAlignmentOptions.Center;
+        ui.arrowText.color = new Color(1f, 1f, 1f, 0.8f); // White
+        ui.arrowText.rectTransform.anchoredPosition = Vector2.zero;
+
+        // Distance Text
+        GameObject distGo = new GameObject("Distance");
+        distGo.transform.SetParent(ui.container.transform);
+        ui.distanceText = distGo.AddComponent<TextMeshProUGUI>();
+        ui.distanceText.fontSize = 18; // Slightly smaller
+        ui.distanceText.alignment = TextAlignmentOptions.Center;
+        ui.distanceText.color = Color.white;
+        ui.distanceText.rectTransform.anchoredPosition = new Vector2(0, -35);
+
+        _activeIndicators.Add(target, ui);
+    }
+
+    public void UnregisterTarget(Transform target)
+    {
+        if (target == null) return;
+        if (_activeIndicators.TryGetValue(target, out IndicatorUI ui))
+        {
+            if (ui.container != null) Destroy(ui.container);
+            _activeIndicators.Remove(target);
+        }
+    }
+
+    private void Update()
+    {
+        if (_mainCamera == null) _mainCamera = Camera.main;
+        if (_mainCamera == null) return;
+
+        // 1. Calculate distances and filter valid targets
+        List<KeyValuePair<Transform, float>> targetsWithDist = new List<KeyValuePair<Transform, float>>();
+        List<Transform> toRemove = new List<Transform>();
+
+        foreach (var pair in _activeIndicators)
+        {
+            if (pair.Key == null)
+            {
+                toRemove.Add(pair.Key);
+                continue;
+            }
+            float dist = Vector3.Distance(_mainCamera.transform.position, pair.Key.position);
+            targetsWithDist.Add(new KeyValuePair<Transform, float>(pair.Key, dist));
+        }
+
+        foreach (Transform t in toRemove) UnregisterTarget(t);
+
+        // 2. Sort by distance
+        targetsWithDist.Sort((a, b) => a.Value.CompareTo(b.Value));
+
+        // 3. Update indicators, only showing top 2
+        for (int i = 0; i < targetsWithDist.Count; i++)
+        {
+            Transform target = targetsWithDist[i].Key;
+            float distance = targetsWithDist[i].Value;
+            IndicatorUI ui = _activeIndicators[target];
+
+            // Only show if it's one of the 2 closest AND beyond threshold
+            bool shouldShow = (i < 2) && (distance > hudThreshold);
+
+            if (!shouldShow)
+            {
+                if (ui.container.activeSelf) ui.container.SetActive(false);
+                continue;
+            }
+
+            if (!ui.container.activeSelf) ui.container.SetActive(true);
+
+            // Calculate Screen Position targeting the base (y=0) to avoid obstruction
+            Vector3 worldPosAtBase = new Vector3(target.position.x, 0, target.position.z);
+            Vector3 screenPos = _mainCamera.WorldToScreenPoint(worldPosAtBase);
+            bool isBehind = screenPos.z < 0;
+
+            Vector3 center = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            
+            if (isBehind || screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height)
+            {
+                // OFF-SCREEN
+                Vector3 dir = (screenPos - center);
+                if (isBehind) dir *= -1;
+                dir.z = 0;
+                dir.Normalize();
+
+                // Position on edge
+                float xPadding = Screen.width * edgePadding;
+                float yPadding = Screen.height * edgePadding;
+                
+                float xLimit = (Screen.width / 2) - xPadding;
+                float yLimit = (Screen.height / 2) - yPadding;
+                
+                // Project to box edge
+                float m = dir.y / dir.x;
+                Vector3 pos = Vector3.zero;
+                
+                if (Mathf.Abs(dir.x * yLimit) > Mathf.Abs(dir.y * xLimit))
+                {
+                    pos = new Vector3(dir.x > 0 ? xLimit : -xLimit, (dir.x > 0 ? xLimit : -xLimit) * m, 0);
+                }
+                else
+                {
+                    pos = new Vector3((dir.y > 0 ? yLimit : -yLimit) / m, dir.y > 0 ? yLimit : -yLimit, 0);
+                }
+
+                ui.rect.position = center + pos;
+                
+                // Point arrow to target
+                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+                ui.arrowText.rectTransform.rotation = Quaternion.Euler(0, 0, angle - 90);
+                ui.distanceText.text = $"{(int)distance}m";
+            }
+            else
+            {
+                // ON-SCREEN
+                ui.rect.position = screenPos;
+                ui.arrowText.rectTransform.rotation = Quaternion.Euler(0, 0, 0); // Point up
+                ui.distanceText.text = $"{(int)distance}m";
+            }
+        }
+    }
+}

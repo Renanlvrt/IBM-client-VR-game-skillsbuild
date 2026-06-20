@@ -1,0 +1,60 @@
+using UnityEngine;
+
+/// <summary>
+/// Simple proximity trigger for NPCs. 
+/// Put this on the NPC (ensure it has a SphereCollider with 'Is Trigger' checked).
+/// </summary>
+public class NPCProximityTrigger : MonoBehaviour
+{
+    public RobotHintAI targetNPC;
+    public string playerTag = "MainCamera"; // Typical tag for VR head
+
+    private void Awake()
+    {
+        if (targetNPC == null) targetNPC = GetComponent<RobotHintAI>();
+    }
+
+    private void OnValidate()
+    {
+        // Auto-assign in inspector
+        if (targetNPC == null) targetNPC = GetComponent<RobotHintAI>();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        bool isPlayer = other.CompareTag(playerTag) || other.GetComponentInParent<CharacterController>() != null;
+        Debug.Log($"[NPCProximityTrigger] Trigger ENTER by {other.name} (Tag: {other.tag}). IsPlayer: {isPlayer}");
+
+        if (isPlayer)
+        {
+            if (targetNPC != null) 
+            {
+                targetNPC.SetPlayerNear(true);
+            }
+            else
+            {
+                Debug.LogWarning("[NPCProximityTrigger] targetNPC is NULL!");
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        bool isPlayer = other.CompareTag(playerTag) || other.GetComponentInParent<CharacterController>() != null;
+        if (isPlayer)
+        {
+            if (targetNPC != null) targetNPC.SetPlayerNear(false);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        SphereCollider sc = GetComponent<SphereCollider>();
+        if (sc != null)
+        {
+            Gizmos.color = new Color(0, 1, 1, 0.3f);
+            Gizmos.matrix = transform.localToWorldMatrix;
+            Gizmos.DrawSphere(sc.center, sc.radius);
+        }
+    }
+}

@@ -1,0 +1,10 @@
+// This script has been disabled/removed based on user request to only use in-world glow/particles.
+// The distance numbers and arrows have been removed to prioritize the immersive magical aura.
+public class NavigationHUD : UnityEngine.MonoBehaviour 
+{ 
+    public static NavigationHUD Instance;
+    private void Awake() { Instance = this; }
+    public void RegisterTarget(UnityEngine.Transform t) {}
+    public void UnregisterTarget(UnityEngine.Transform t) {}
+    public void SetTarget(UnityEngine.Transform t) {}
+}

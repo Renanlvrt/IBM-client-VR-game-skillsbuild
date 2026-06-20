@@ -1,0 +1,155 @@
+using UnityEngine;
+using System.Collections;
+using System.IO;
+using System.Threading.Tasks;
+using Abuksigun.Piper;
+
+/// <summary>
+/// A wrapper for the UnityPiper package to provide offline TTS.
+/// </summary>
+public class PiperSpeakerComponent : MonoBehaviour
+{
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public string voiceModelName = "en_US-bryce-medium.onnx";
+    // public string voiceModelName = "en_US-kusal-medium.onnx";
+    // public string voiceModelName = "en_US-kusal-medium.onnx";
+    // public string voiceModelName = "en_GB-semaine-medium.onnx";
+    public string espeakDataName = "espeak-ng-1.52.0";
+
+    private Piper piper;
+    private PiperVoice piperVoice;
+    private PiperSpeaker piperSpeaker;
+    private bool isInitialized = false;
+    private bool _isInitializing = false;
+
+    private void Awake()
+    {
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+    }
+
+    private async Task EnsureInitialized()
+    {
+        if (isInitialized || _isInitializing) return;
+        _isInitializing = true;
+
+        try
+        {
+            // Use forward slashes for native path safety
+            string streamingPath = Application.streamingAssetsPath.Replace("\\", "/");
+            string espeakPath = Path.Combine(streamingPath, espeakDataName).Replace("\\", "/");
+            string modelPath = Path.Combine(streamingPath, "Voices", voiceModelName).Replace("\\", "/");
+
+            Debug.Log($"[PiperTTS] Attempting initialization. \nEspeak: {espeakPath}\nModel: {modelPath}");
+
+            if (!Directory.Exists(espeakPath))
+            {
+                Debug.LogError($"[PiperTTS] FOLDER NOT FOUND: {espeakPath}");
+                _isInitializing = false;
+                return;
+            }
+
+            // --- DEEP VALIDATION ---
+            // The espeak-ng-data folder MUST contain binary tables (phondata, phontab, etc.)
+            // If it only has 'lang' and 'voices', it is the SOURCE code version and will crash.
+            string dataSubFolder = Path.Combine(espeakPath, "espeak-ng-data").Replace("\\", "/");
+            string phondataFile = Path.Combine(dataSubFolder, "phondata").Replace("\\", "/");
+
+            if (!File.Exists(phondataFile))
+            {
+                Debug.LogError($"[PiperTTS] CRITICAL ERROR: Missing compiled binary data at {phondataFile}.\n" +
+                               "It seems you have the 'Source Code' version of espeak-ng. " +
+                               "You MUST download the 'Binary Data' version which contains 'phondata', 'phontab', and 'phonindex'.");
+                _isInitializing = false;
+                return;
+            }
+
+            if (!File.Exists(modelPath))
+            {
+                Debug.LogError($"[PiperTTS] MODEL NOT FOUND: {modelPath}");
+                _isInitializing = false;
+                return;
+            }
+
+            Debug.Log($"[PiperTTS] Initializing engine with path: {espeakPath}");
+            piper = await Piper.LoadPiper(espeakPath);
+            
+            Debug.Log($"[PiperTTS] Loading voice model: {modelPath}");
+            piperVoice = await PiperVoice.LoadPiperVoice(piper, modelPath);
+            
+            // PiperSpeaker constructor calls AudioClip.Create, which MUST be on the main thread.
+            piperSpeaker = new PiperSpeaker(piperVoice);
+            isInitialized = true;
+            Debug.Log("[PiperTTS] Offline voice system initialized successfully!");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[PiperTTS] Native Crash prevented! Error: {ex.Message}\n{ex.StackTrace}");
+        }
+        finally
+        {
+            _isInitializing = false;
+        }
+    }
+
+    /// <summary>
+    /// Changes the voice model and re-initializes the speaker.
+    /// </summary>
+    public async Task SetVoiceModel(string modelName)
+    {
+        if (voiceModelName == modelName && isInitialized) return;
+
+        voiceModelName = modelName;
+        isInitialized = false; // Force re-initialization
+        await EnsureInitialized();
+    }
+
+    /// <summary>
+    /// Speaks text using the offline Piper engine.
+    /// </summary>
+    public async void Speak(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+        
+        while (_isInitializing) await Task.Delay(100);
+
+        if (!isInitialized)
+        {
+            await EnsureInitialized();
+        }
+
+        if (isInitialized && piperSpeaker != null)
+        {
+            Debug.Log($"[PiperTTS] Generating speech: {text}");
+            
+            // Start the generation (non-blocking for immediate audio streaming)
+            var task = piperSpeaker.Speak(text);
+            
+            if (audioSource != null)
+            {
+                audioSource.clip = piperSpeaker.AudioClip;
+                audioSource.loop = true; // CRITICAL: Must be true for procedural "stream" clips
+                
+                // Ensure volume is audible
+                if (audioSource.volume < 0.1f) audioSource.volume = 1.0f;
+                
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.Play();
+                }
+            }
+
+            await task; // Wait for the background gen to finish if needed for logic
+        }
+        else
+        {
+            Debug.LogWarning("[PiperTTS] Fallback requested but system failed to initialize.");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        piperVoice?.Dispose();
+        piper?.Dispose();
+    }
+}

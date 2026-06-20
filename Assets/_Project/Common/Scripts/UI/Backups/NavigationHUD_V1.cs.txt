@@ -1,0 +1,136 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+
+public class NavigationHUD : MonoBehaviour
+{
+    private static NavigationHUD _instance;
+    public static NavigationHUD Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject go = new GameObject("NavigationHUD");
+                _instance = go.AddComponent<NavigationHUD>();
+            }
+            return _instance;
+        }
+    }
+
+    private GameObject _arrowContainer;
+    private RectTransform _arrowRect;
+    private TextMeshProUGUI _distanceText;
+    private Transform _target;
+    private Camera _mainCamera;
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
+        
+        _mainCamera = Camera.main;
+        CreateHUD();
+    }
+
+    private void CreateHUD()
+    {
+        // 1. Create Canvas
+        GameObject canvasGo = new GameObject("HUDCanvas");
+        canvasGo.transform.SetParent(this.transform);
+        Canvas canvas = canvasGo.AddComponent<Canvas>();
+        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        canvasGo.AddComponent<CanvasScaler>();
+        canvasGo.AddComponent<GraphicRaycaster>();
+
+        // 2. Create Arrow Container (positioned at edge)
+        _arrowContainer = new GameObject("ArrowContainer");
+        _arrowContainer.transform.SetParent(canvasGo.transform);
+        _arrowRect = _arrowContainer.AddComponent<RectTransform>();
+        _arrowRect.sizeDelta = new Vector2(100, 100);
+        _arrowRect.anchoredPosition = Vector2.zero;
+
+        // 3. Create Arrow Image
+        GameObject arrowImgGo = new GameObject("ArrowImage");
+        arrowImgGo.transform.SetParent(_arrowContainer.transform);
+        Image img = arrowImgGo.AddComponent<Image>();
+        img.color = Color.yellow;
+        
+        // Use a simple triangle via procedural mesh or just a white square rotated 45 deg for now
+        // Ideally the user provides a sprite, but we'll use a placeholder
+        img.rectTransform.sizeDelta = new Vector2(40, 40);
+        img.rectTransform.localRotation = Quaternion.Euler(0, 0, 45); // Make it a diamond
+
+        // 4. Create Distance Text
+        GameObject textGo = new GameObject("DistanceText");
+        textGo.transform.SetParent(_arrowContainer.transform);
+        _distanceText = textGo.AddComponent<TextMeshProUGUI>();
+        _distanceText.fontSize = 24;
+        _distanceText.alignment = TextAlignmentOptions.Center;
+        _distanceText.color = Color.white;
+        _distanceText.rectTransform.anchoredPosition = new Vector2(0, -40);
+        _distanceText.text = "0m";
+
+        _arrowContainer.SetActive(false);
+    }
+
+    public void SetTarget(Transform target)
+    {
+        _target = target;
+        _arrowContainer.SetActive(target != null);
+    }
+
+    private void Update()
+    {
+        if (_target == null || _mainCamera == null)
+        {
+            if (_arrowContainer.activeSelf) _arrowContainer.SetActive(false);
+            return;
+        }
+
+        float distance = Vector3.Distance(_mainCamera.transform.position, _target.position);
+        
+        // Only show if far away
+        if (distance < 10f)
+        {
+            if (_arrowContainer.activeSelf) _arrowContainer.SetActive(false);
+            return;
+        }
+
+        if (!_arrowContainer.activeSelf) _arrowContainer.SetActive(true);
+
+        // Calculate direction on screen
+        Vector3 screenPos = _mainCamera.WorldToScreenPoint(_target.position);
+        bool isBehind = screenPos.z < 0;
+
+        Vector2 canvasPos;
+        if (isBehind || screenPos.x < 0 || screenPos.x > Screen.width || screenPos.y < 0 || screenPos.y > Screen.height)
+        {
+            // Point is off-screen
+            Vector3 center = new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            Vector3 dir = (screenPos - center);
+            if (isBehind) dir *= -1;
+            
+            dir.Normalize();
+            canvasPos = new Vector2(center.x + dir.x * (Screen.width * 0.4f), center.y + dir.y * (Screen.height * 0.4f));
+            
+            // Rotate arrow to point to target
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            _arrowRect.rotation = Quaternion.Euler(0, 0, angle - 90);
+        }
+        else
+        {
+            // Point is on-screen
+            canvasPos = screenPos;
+            _arrowRect.rotation = Quaternion.Euler(0, 0, 0); // Point up or disable rotation
+        }
+
+        _arrowRect.position = canvasPos;
+        _distanceText.text = $"{(int)distance}m";
+    }
+}

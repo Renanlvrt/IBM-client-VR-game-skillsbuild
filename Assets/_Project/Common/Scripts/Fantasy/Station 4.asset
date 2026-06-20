@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb184dd38e35214b97e53b268a5b88a, type: 3}
+  m_Name: Station 4
+  m_EditorClassIdentifier: Assembly-CSharp::FantasyStationConfig
+  stationID: tts_004
+  question: You have implemented a TTS system in a mobile app for reading out news
+    articles. However, users have reported that some words and names are mispronounced,
+    disrupting their listening experience
+  answers:
+  - answerText: Adjust the speed and pitch of the TTS output.
+    ingredientID: ingredient_1
+  - answerText: Get the audio recorded by a professional voice-over artist.
+    ingredientID: ingredient_2
+  - answerText: Increase the volume of the TTS output.
+    ingredientID: ingredient_3
+  - answerText: Update the phonetic database to include correct pronunciations for
+      commonly mispronounced words.
+    ingredientID: ingredient_4
+  correctIngredientID: Update the phonetic database to include correct pronunciations
+    for commonly mispronounced words.

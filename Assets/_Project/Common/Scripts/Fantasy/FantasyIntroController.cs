@@ -1,0 +1,212 @@
+using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
+
+public class FantasyIntroController : MonoBehaviour
+{
+    [Header("Robot")]
+    [SerializeField] private Transform robot;
+
+    [Header("Player")]
+    [SerializeField] private Transform player;
+
+    [Header("References")]
+    [SerializeField] private SpeechBubble robotSpeechBubble;
+    [SerializeField] private PiperSpeakerComponent piperTTS;
+    [SerializeField] private WizardInteract wizardInteract;
+    [SerializeField] private GazeInteractionPrompt gazePrompt;
+
+    [Header("Triggers")]
+    [SerializeField] private Collider arrivalTrigger;
+    [SerializeField] private Collider wizardAreaTrigger;
+
+    [Header("Waypoints")]
+    [SerializeField] private Transform wizardWaypoint;
+
+    [Header("Agent Settings")]
+    [SerializeField] private float robotSpeed = 10f;
+    [SerializeField] private float robotAcceleration = 8f;
+    [SerializeField] private float robotAngularSpeed = 120f;
+
+    private RobotAI robotAI;
+    private NavMeshAgent robotAgent;
+    private bool arrivalTriggered = false;
+    private bool wizardAreaTriggered = false;
+
+    private enum FantasyIntroPhase
+    {
+        WaitingForArrival,
+        Arrival,
+        WalkingToWizard,
+        WaitingForWizardArea,
+        PromptWizardInteract,
+        WizardDialogue,
+        RobotReaction,
+        Complete
+    }
+
+    private FantasyIntroPhase currentPhase = FantasyIntroPhase.WaitingForArrival;
+
+    private void Awake()
+    {
+        robotAI = robot.GetComponentInChildren<RobotAI>();
+        robotAgent = robot.GetComponentInChildren<NavMeshAgent>();
+        if (piperTTS == null) piperTTS = robot.GetComponentInChildren<PiperSpeakerComponent>();
+    }
+
+    private void Start()
+    {
+        robotAI.enabled = false;
+        wizardInteract.enabled = false;
+
+        robotAgent.speed = robotSpeed;
+        robotAgent.acceleration = robotAcceleration;
+        robotAgent.angularSpeed = robotAngularSpeed;
+        robotAgent.isStopped = true;
+    }
+
+    public void OnArrivalTriggered()
+    {
+        if (arrivalTriggered) return;
+        if (currentPhase != FantasyIntroPhase.WaitingForArrival) return;
+
+        arrivalTriggered = true;
+        StartCoroutine(ArrivalSequence());
+    }
+
+    public void OnWizardAreaTriggered()
+    {
+        if (wizardAreaTriggered) return;
+        if (currentPhase != FantasyIntroPhase.WaitingForWizardArea) return;
+
+        wizardAreaTriggered = true;
+        StartCoroutine(PromptWizardInteract());
+    }
+
+    // ─────────────────────────────────
+    // PHASE 1: Arrival
+    // ─────────────────────────────────
+    private IEnumerator ArrivalSequence()
+    {
+        currentPhase = FantasyIntroPhase.Arrival;
+
+        yield return new WaitForSeconds(0.5f);
+        
+        yield return StartCoroutine(SayWithVoice(new string[]
+        {
+            "Welcome to the Fantasy World.",
+            "Come on, let's find the wizard!"
+        }, null));
+
+        StartCoroutine(WalkToWizard());
+    }
+
+    // ─────────────────────────────────
+    // PHASE 2: Walk to Wizard
+    // ─────────────────────────────────
+    private IEnumerator WalkToWizard()
+    {
+        currentPhase = FantasyIntroPhase.WalkingToWizard;
+
+        yield return new WaitForSeconds(0.5f);
+
+        robotAgent.isStopped = false;
+        robotAgent.SetDestination(wizardWaypoint.position);
+
+        yield return new WaitUntil(() =>
+            !robotAgent.pathPending &&
+            robotAgent.remainingDistance <= robotAgent.stoppingDistance + 0.5f
+        );
+
+        robotAgent.isStopped = true;
+
+        // Now wait for player to enter the wizard area trigger
+        currentPhase = FantasyIntroPhase.WaitingForWizardArea;
+    }
+
+    // ─────────────────────────────────
+    // PHASE 3: Prompt Wizard Interact
+    // ─────────────────────────────────
+    private IEnumerator PromptWizardInteract()
+    {
+        currentPhase = FantasyIntroPhase.PromptWizardInteract;
+
+        yield return StartCoroutine(SayWithVoice(new string[]
+        {
+            "This must be the wizard. Go talk to him!"
+        }, null));
+
+        yield return new WaitForSeconds(0.5f);
+
+        wizardInteract.enabled = true;
+        gazePrompt.ShowAction("Interact");
+
+        bool wizardDone = false;
+        wizardInteract.SetIntroCallback(() => wizardDone = true);
+
+        yield return new WaitUntil(() => wizardDone);
+
+        gazePrompt.Hide();
+
+        StartCoroutine(RobotReaction());
+    }
+
+    // ─────────────────────────────────
+    // PHASE 4: Robot Reaction
+    // ─────────────────────────────────
+    private IEnumerator RobotReaction()
+    {
+        currentPhase = FantasyIntroPhase.RobotReaction;
+
+        yield return new WaitForSeconds(1f);
+
+        yield return StartCoroutine(SayWithVoice(new string[]
+        {
+            "Right, eight ingredients. Got it.",
+            "Give me the ingredients you think are correct.",
+            "Let's get moving!"
+        }, null));
+
+        FinishIntro();
+    }
+ 
+    private IEnumerator SayWithVoice(string[] lines, System.Action onDone)
+    {
+        foreach (string line in lines)
+        {
+            // 1. Explicitly trigger speech
+            if (piperTTS != null)
+            {
+                piperTTS.Speak(line);
+            }
+
+            // 2. Trigger bubble
+            bool lineDone = false;
+            robotSpeechBubble.Say(new string[] { line }, () => lineDone = true);
+ 
+            // Automatic flow
+            float duration = 1.5f + (line.Split(' ').Length * 0.4f);
+            yield return new WaitForSeconds(duration);
+        }
+ 
+        onDone?.Invoke();
+    }
+
+    // ─────────────────────────────────
+    // COMPLETE
+    // ─────────────────────────────────
+    private void FinishIntro()
+    {
+        currentPhase = FantasyIntroPhase.Complete;
+
+        FantasyWorldManager.Instance.ActivateWorld();
+
+        robotAI.enabled = true;
+
+        // Disable triggers
+        if (arrivalTrigger != null) arrivalTrigger.gameObject.SetActive(false);
+        if (wizardAreaTrigger != null) wizardAreaTrigger.gameObject.SetActive(false);
+
+        this.enabled = false;
+    }
+}

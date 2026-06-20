@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb184dd38e35214b97e53b268a5b88a, type: 3}
+  m_Name: Station 2
+  m_EditorClassIdentifier: Assembly-CSharp::FantasyStationConfig
+  stationID: tts_002
+  question: The client feels that the default digital voice does not meet their requirement
+    for an expressive human-like voice. How can you address this issue?
+  answers:
+  - answerText: "Try again. If it doesn\u2019t work, accept it as is."
+    ingredientID: ingredient_1
+  - answerText: Select an expressive neural voice available in the IBM Watson Text
+      to Speech system.
+    ingredientID: ingredient_2
+  - answerText: Record human voice.
+    ingredientID: ingredient_3
+  - answerText: Select another voice.
+    ingredientID: ingredient_4
+  correctIngredientID: Select an expressive neural voice available in the IBM Watson
+    Text to Speech system.

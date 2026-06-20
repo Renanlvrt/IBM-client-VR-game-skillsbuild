@@ -1,0 +1,92 @@
+using UnityEngine;
+
+public class AdaptiveBookVisuals : MonoBehaviour
+{
+    [Header("Components")]
+    [SerializeField] private ParticleSystem auraParticles;
+    [SerializeField] private Light pulseLight;
+    [SerializeField] private Renderer bookRenderer;
+
+    [Header("Distance Settings")]
+    [SerializeField] private float fadeStartDistance = 5f;   // Completely off when closer than this
+    [SerializeField] private float fullEffectDistance = 25f; // Full power when further than this
+    [SerializeField] private float hudThreshold = 10f;      // Show HUD arrow if further than this
+
+    [Header("Pulse Settings")]
+    [SerializeField] private float pulseSpeed = 2f;
+    [SerializeField] private float minPulseIntensiy = 0.5f;
+    [SerializeField] private float maxPulseIntensity = 3f;
+
+    [Header("Emission")]
+    [SerializeField] private string emissionProp = "_EmissionColor";
+    [SerializeField] private Color emissionColor = Color.cyan;
+    [SerializeField] private float maxEmission = 0.4f;
+
+    private Material _bookMat;
+    private Transform _playerTransform;
+    private bool _isCurrentTarget = true; // For now assuming all books are targets if far
+
+    private void Awake()
+    {
+        if (bookRenderer != null)
+        {
+            _bookMat = bookRenderer.material;
+            _bookMat.EnableKeyword("_EMISSION");
+        }
+
+        if (Camera.main != null)
+            _playerTransform = Camera.main.transform;
+
+        // Auto-assign if missing
+        if (auraParticles == null) auraParticles = GetComponentInChildren<ParticleSystem>();
+        if (pulseLight == null) pulseLight = GetComponentInChildren<Light>();
+    }
+
+    private void OnEnable()
+    {
+        if (_isCurrentTarget)
+        {
+            NavigationHUD.Instance.RegisterTarget(this.transform);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (NavigationHUD.Instance != null)
+        {
+            NavigationHUD.Instance.UnregisterTarget(this.transform);
+        }
+    }
+
+    private void Update()
+    {
+        if (_playerTransform == null) return;
+
+        float distance = Vector3.Distance(transform.position, _playerTransform.position);
+        
+        // --- Calculate Visibility Factor (0 to 1) ---
+        float t = Mathf.InverseLerp(fadeStartDistance, fullEffectDistance, distance);
+        t = Mathf.SmoothStep(0f, 1f, t);
+
+        // --- Pulsing Light ---
+        if (pulseLight != null)
+        {
+            float pulse = Mathf.Lerp(minPulseIntensiy, maxPulseIntensity, (Mathf.Sin(Time.time * pulseSpeed) + 1f) / 2f);
+            pulseLight.intensity = t * pulse;
+            pulseLight.enabled = pulseLight.intensity > 0.01f;
+        }
+
+        // --- Particle Aura ---
+        if (auraParticles != null)
+        {
+            var emission = auraParticles.emission;
+            emission.enabled = t > 0.1f;
+        }
+
+        // --- Subtle Emission ---
+        if (_bookMat != null)
+        {
+            _bookMat.SetColor(emissionProp, emissionColor * (t * maxEmission));
+        }
+    }
+}
