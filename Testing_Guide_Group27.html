@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Test Report Writing Guide — Group 27 VrBimBumBam</title>
+<style>
+  @page { margin: 2cm; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #1a1a1a;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2cm;
+  }
+  h1 { font-size: 20pt; text-align: center; margin-bottom: 5px; }
+  h2 { font-size: 15pt; border-bottom: 2px solid #333; padding-bottom: 4px; margin-top: 30px; }
+  h3 { font-size: 13pt; margin-top: 22px; color: #2c3e50; }
+  h4 { font-size: 11pt; margin-top: 18px; color: #34495e; }
+  .subtitle { text-align: center; font-size: 12pt; color: #555; margin-bottom: 30px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 18px 0; font-size: 10pt; }
+  th, td { border: 1px solid #999; padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { background-color: #ecf0f1; font-weight: bold; }
+  .test-table th:first-child { width: 140px; }
+  code { font-family: 'Courier New', monospace; font-size: 10pt; background: #f4f4f4; padding: 1px 4px; border-radius: 2px; }
+  ul { margin: 5px 0; padding-left: 22px; }
+  li { margin-bottom: 4px; }
+  .highlight { background-color: #fff3cd; padding: 10px 14px; border-left: 4px solid #ffc107; margin: 12px 0; }
+  .important { background-color: #f8d7da; padding: 10px 14px; border-left: 4px solid #dc3545; margin: 12px 0; }
+  .info { background-color: #d1ecf1; padding: 10px 14px; border-left: 4px solid #17a2b8; margin: 12px 0; }
+  .page-break { page-break-before: always; }
+  .toc { background: #f9f9f9; padding: 15px 20px; border: 1px solid #ddd; margin: 20px 0; }
+  .toc ul { list-style: none; padding-left: 0; }
+  .toc li { margin-bottom: 3px; }
+  .toc a { text-decoration: none; color: #2c3e50; }
+  .assignment-table td:first-child { font-weight: bold; }
+  .result-placeholder { color: #c0392b; font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Test Report Writing Guide</h1>
+<p class="subtitle">VrBimBumBam &mdash; Group 27 &mdash; COMP2281 Software Engineering 2025/26<br>
+Erica, Renan, Iustin, Ruixi, Palak</p>
+
+<div class="toc">
+<strong>Contents</strong>
+<ul>
+  <li>1. Key Principle: Traceability to BRs</li>
+  <li>2. Section 1: What Has Been Tested (20%)</li>
+  <li>3. Section 2: Test Cases (50%) &mdash; Unit, System, UAT</li>
+  <li>4. Section 3: Testing Context (20%)</li>
+  <li>5. Section 4: Summary and Reflection (10%)</li>
+  <li>6. Task Assignment</li>
+</ul>
+</div>
+
+<h2>1. Key Principle: Traceability to BRs</h2>
+
+<div class="important">
+<strong>Every test must link back to a specific behavioural requirement (BR1&ndash;BR9)</strong> from our requirements document. The marker wants to see that our tests verify what we <em>said</em> the system would do. Always reference the BR number in the Test Oracle field.
+</div>
+
+<p>Our requirements document defines 9 behavioural requirements (BR1&ndash;BR9) with Gherkin scenarios. The test report must demonstrate that we tested against these specifications. Where the implementation differs from the original BR (e.g., BR2.1 uses local reposition instead of scene loading), document this honestly.</p>
+
+<h2>2. Section 1: What Has Been Tested (20%)</h2>
+
+<p>For each test type, list the modules/functions and state the <strong>oracle</strong> (where the expected result comes from). The oracle should reference our BRs or Gherkin scenarios.</p>
+
+<h3>Unit Testing &mdash; Items Under Test</h3>
+<ul>
+  <li><code>QuizManager.SubmitAnswer(int selectedIndex)</code> &mdash; Oracle: BR3.2/BR3.3 states correct answer advances quiz, incorrect triggers retry (up to 3 attempts)</li>
+  <li><code>QuizManager.LoadQuiz(string worldId)</code> &mdash; Oracle: BR3.1 requires quiz to present questions with four options; JSON must parse correctly from <code>StreamingAssets/Data/Worlds/{worldId}.json</code></li>
+  <li><code>ScoreLog.RecordScore(string worldId, int score, int totalQuestions)</code> &mdash; Oracle: BR5.2 states completing a world updates progress; returns <code>true</code> only when score exceeds stored best</li>
+  <li><code>WrongAnswerLog.LogWrongAnswer(string worldId, QuestionData q)</code> &mdash; Oracle: design specification requires wrong answers to be logged for analytics</li>
+  <li><code>InventoryManager.AddItem() / PopItem() / HasItem()</code> &mdash; Oracle: BR4.1 states keys/tools are added to player&rsquo;s inventory</li>
+  <li><code>Cauldron.CheckRecipe()</code> &mdash; Oracle: design specification requires all 7 correct ingredients for win; any wrong ingredient triggers failure with adaptive hint (BR8.1)</li>
+  <li><code>GameState.currentState</code> setter &mdash; Oracle: design specification requires state change events to fire for Hoverboard/Station transitions (supports BR2.1)</li>
+  <li><code>RobotHintAI</code> JSON response parsing &mdash; Oracle: BR8.1/BR8.2 requires AI Orb to provide hints; LLM responses must parse into <code>{thought, hint, emotion}</code> fields</li>
+</ul>
+
+<h3>System Testing &mdash; Items Under Test</h3>
+<ul>
+  <li>Full quiz flow from entry to completion &mdash; Oracle: BR3.1&ndash;BR3.4 acceptance criteria</li>
+  <li>Station/portal transition with fade effect &mdash; Oracle: BR2.1 acceptance criteria</li>
+  <li>AI hint delivery after incorrect quiz answer &mdash; Oracle: BR8.1 acceptance criteria</li>
+  <li>Robot escort collects item and delivers to cauldron &mdash; Oracle: BR9.2 acceptance criteria</li>
+  <li>Score persistence across sessions &mdash; Oracle: BR5.1/BR5.2 acceptance criteria</li>
+  <li>Cauldron puzzle: collect, submit, validate &mdash; Oracle: design specification derived from BR4.1</li>
+</ul>
+
+<h3>User Acceptance Testing (UAT) &mdash; Items Under Test</h3>
+<ul>
+  <li>BR3 User Story: &ldquo;As a player, I want to complete quizzes&hellip;&rdquo; &mdash; Oracle: end-user confirms quiz is completable and score is shown</li>
+  <li>BR8 User Story: &ldquo;As a player, I want to receive hints when I get stuck&hellip;&rdquo; &mdash; Oracle: end-user confirms hints are helpful without giving away answers</li>
+  <li>BR9 User Story: &ldquo;As a player, I want the AI Orb to guide me&hellip;&rdquo; &mdash; Oracle: end-user confirms robot provides guidance</li>
+  <li>BR2 User Story: &ldquo;As a player, I want to travel to different skill worlds&hellip;&rdquo; &mdash; Oracle: end-user confirms portal transitions work</li>
+  <li>BR1 User Story: &ldquo;As a player, I want to understand where I am&hellip;&rdquo; &mdash; Oracle: end-user confirms spawn shows all portals</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>3. Section 2: Test Cases (50%)</h2>
+
+<div class="highlight">
+<strong>Important notes:</strong>
+<ul>
+  <li>Our BR status section (Section 2.1 of the tech report) already noted some requirements are &ldquo;Partially Met&rdquo; or &ldquo;Not Met&rdquo; &mdash; tests should reflect this honestly.</li>
+  <li>Reference the <strong>specific BR number</strong> in each Test Oracle field.</li>
+  <li>We don&rsquo;t have a formal test framework (no NUnit) &mdash; our tests are <strong>manual tests</strong> in Unity Play Mode. That is acceptable; just be explicit about it.</li>
+  <li>If a test fails, record it, note the severity, fix the bug, and run <strong>Cycle 2</strong>.</li>
+</ul>
+</div>
+
+<h3>Unit Test Cases</h3>
+
+<h4>UT-01: Quiz loads and parses JSON correctly</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-01</td></tr>
+  <tr><th>Description</th><td><code>QuizManager.LoadQuiz()</code> correctly loads and deserialises a world JSON file into <code>QuizData</code> with questions, options, and NPC data</td></tr>
+  <tr><th>Preconditions</th><td>World JSON file exists at <code>StreamingAssets/Data/Worlds/cyberpunk.json</code> with valid structure</td></tr>
+  <tr><th>Input(s)</th><td>Call <code>LoadQuiz("cyberpunk")</code></td></tr>
+  <tr><th>Expected Output</th><td><code>QuizData</code> object populated with non-null <code>questions</code> array, each question has exactly 4 options, a valid <code>correctIndex</code> (0&ndash;3), and non-empty <code>topic</code> and <code>learning_goal</code> fields</td></tr>
+  <tr><th>Test Oracle</th><td>BR3.1 &mdash; &ldquo;system presents the first question with four answer-bridges (A, B, C, D)&rdquo;</td></tr>
+  <tr><th>Equivalence Class</th><td>Valid JSON file (pass) vs missing file (fail gracefully) vs malformed JSON (fail gracefully)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-01</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-02: Correct answer increments score</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-02</td></tr>
+  <tr><th>Description</th><td><code>QuizManager.SubmitAnswer()</code> with the correct index increments the score by 1 and advances to the next question</td></tr>
+  <tr><th>Preconditions</th><td>Quiz loaded with question where <code>correctIndex = 2</code>, current score = 0, question index = 0</td></tr>
+  <tr><th>Input(s)</th><td><code>SubmitAnswer(2)</code></td></tr>
+  <tr><th>Expected Output</th><td>Score becomes 1; <code>ShowCurrentQuestion()</code> called for the next question; <code>QuizUI.ShowFeedback(true)</code> triggered</td></tr>
+  <tr><th>Test Oracle</th><td>BR3.2 &mdash; &ldquo;When the player walks onto the correct bridge, then the next question appears&rdquo;</td></tr>
+  <tr><th>Equivalence Class</th><td>Correct index (value matching <code>correctIndex</code>) vs incorrect indices (all other values 0&ndash;3)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-02</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-03: Incorrect answer decrements retries and logs wrong answer</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-03</td></tr>
+  <tr><th>Description</th><td><code>QuizManager.SubmitAnswer()</code> with a wrong index decreases retries from 3 and calls <code>WrongAnswerLog.LogWrongAnswer()</code></td></tr>
+  <tr><th>Preconditions</th><td>Quiz loaded, retries = 3, current question has <code>correctIndex = 1</code></td></tr>
+  <tr><th>Input(s)</th><td><code>SubmitAnswer(0)</code></td></tr>
+  <tr><th>Expected Output</th><td>Retries decremented to 2; wrong answer logged to <code>wrong_questions.json</code>; <code>QuizUI.ShowFeedback(false)</code> called; retry/AI buttons shown</td></tr>
+  <tr><th>Test Oracle</th><td>BR3.3 &mdash; &ldquo;When the player walks onto an incorrect bridge&rdquo; (modified: player retries up to 3 times instead of full restart)</td></tr>
+  <tr><th>Equivalence Class</th><td>Wrong answer with retries remaining (retry offered) vs wrong answer with 0 retries (forced to next question)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-03</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-04: ScoreLog records new best score</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-04</td></tr>
+  <tr><th>Description</th><td><code>ScoreLog.RecordScore()</code> returns <code>true</code> and updates <code>scores.json</code> when score exceeds previous best</td></tr>
+  <tr><th>Preconditions</th><td><code>scores.json</code> exists with world &ldquo;cyberpunk&rdquo; best score = 5</td></tr>
+  <tr><th>Input(s)</th><td><code>RecordScore("cyberpunk", 7, 10)</code></td></tr>
+  <tr><th>Expected Output</th><td>Returns <code>true</code>; <code>scores.json</code> updated with best score = 7 for &ldquo;cyberpunk&rdquo;</td></tr>
+  <tr><th>Test Oracle</th><td>BR5.2 &mdash; &ldquo;When the system updates their profile, then their overall progress percentage increases&rdquo;</td></tr>
+  <tr><th>Equivalence Class</th><td>Score &gt; best (returns true, updates) vs Score &le; best (returns false, no update) vs first score for world (creates new entry)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-04</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-05: ScoreLog does not overwrite with lower score</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-05</td></tr>
+  <tr><th>Description</th><td><code>ScoreLog.RecordScore()</code> returns <code>false</code> and preserves existing best when new score is lower</td></tr>
+  <tr><th>Preconditions</th><td><code>scores.json</code> exists with world &ldquo;cyberpunk&rdquo; best score = 7</td></tr>
+  <tr><th>Input(s)</th><td><code>RecordScore("cyberpunk", 3, 10)</code></td></tr>
+  <tr><th>Expected Output</th><td>Returns <code>false</code>; <code>scores.json</code> still shows best score = 7</td></tr>
+  <tr><th>Test Oracle</th><td>BR5.2 &mdash; progress should only increase, not decrease</td></tr>
+  <tr><th>Equivalence Class</th><td>Same class as UT-04 (Score &le; best)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-05</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-06: InventoryManager add and pop operations</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-06</td></tr>
+  <tr><th>Description</th><td>Adding items to inventory increases count; <code>PopItem()</code> returns last added item (LIFO)</td></tr>
+  <tr><th>Preconditions</th><td>Inventory is empty</td></tr>
+  <tr><th>Input(s)</th><td><code>AddItem(itemA)</code>, <code>AddItem(itemB)</code>, then <code>PopItem()</code></td></tr>
+  <tr><th>Expected Output</th><td>After adds: count = 2. <code>PopItem()</code> returns <code>itemB</code>; count becomes 1</td></tr>
+  <tr><th>Test Oracle</th><td>BR4.1 &mdash; &ldquo;the awarded key or tool is added to the player&rsquo;s inventory&rdquo;</td></tr>
+  <tr><th>Equivalence Class</th><td>Non-empty inventory (returns item) vs empty inventory (<code>PopItem()</code> returns null)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-06</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-07: Cauldron recipe validation with all correct ingredients</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-07</td></tr>
+  <tr><th>Description</th><td><code>Cauldron.CheckRecipe()</code> triggers win condition when all 7 required ingredients are added</td></tr>
+  <tr><th>Preconditions</th><td>Cauldron has 7 required items defined; all 7 correct items added via <code>AddIngredient()</code></td></tr>
+  <tr><th>Input(s)</th><td><code>CheckRecipe()</code></td></tr>
+  <tr><th>Expected Output</th><td>Win puzzle triggered; emission glow effect plays; <code>RobotHintAI.GiveCauldronVictory()</code> called</td></tr>
+  <tr><th>Test Oracle</th><td>Design specification &mdash; cauldron requires strict set matching of all required items</td></tr>
+  <tr><th>Equivalence Class</th><td>All 7 correct (win) vs 6 correct + 1 wrong (fail) vs fewer than 7 items (fail)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-07</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UT-08: GameState fires event on state change</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UT-08</td></tr>
+  <tr><th>Description</th><td>Setting <code>GameState.currentState</code> fires the <code>OnStateChanged</code> event with the new state value</td></tr>
+  <tr><th>Preconditions</th><td><code>GameState.currentState</code> is <code>PlayerState.Hoverboard</code>; a listener is subscribed to <code>OnStateChanged</code></td></tr>
+  <tr><th>Input(s)</th><td>Set <code>GameState.currentState = PlayerState.Station</code></td></tr>
+  <tr><th>Expected Output</th><td><code>OnStateChanged</code> event fires with value <code>PlayerState.Station</code></td></tr>
+  <tr><th>Test Oracle</th><td>Design specification &mdash; station transitions depend on state change events (supports BR2.1)</td></tr>
+  <tr><th>Equivalence Class</th><td>Different state (event fires) vs same state (should not fire duplicate event)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UT-08</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h3>System Test Cases</h3>
+
+<h4>ST-01: Full quiz playthrough from start to completion</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>ST-01</td></tr>
+  <tr><th>Description</th><td>Player enters a world, completes the quiz by answering all questions, and sees the results screen with their score</td></tr>
+  <tr><th>Preconditions</th><td>Game running in Play Mode; player is in a skill world with quiz loaded</td></tr>
+  <tr><th>Input(s)</th><td>Interact with quiz station; answer each question (mix of correct and incorrect); complete all questions</td></tr>
+  <tr><th>Expected Output</th><td>Quiz UI displays each question with 4 options; correct answers advance; incorrect answers show retry/AI buttons; completion screen shows score out of total and best score; score saved to <code>scores.json</code></td></tr>
+  <tr><th>Test Oracle</th><td>BR3.1, BR3.2, BR3.3, BR3.4, BR5.2</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>ST-01</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>ST-02: Station entry with fade transition</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>ST-02</td></tr>
+  <tr><th>Description</th><td>Player enters a station zone and the system performs a fade-to-black transition, repositions the player, and fades back in</td></tr>
+  <tr><th>Preconditions</th><td>Player is on hoverboard near a station trigger zone</td></tr>
+  <tr><th>Input(s)</th><td>Walk/ride into station trigger zone collider</td></tr>
+  <tr><th>Expected Output</th><td><code>StationZone.OnTriggerEnter</code> fires; <code>Station.EnterStation()</code> executes fade-to-black; player teleported to station centre; <code>GameState.currentState</code> changes to <code>Station</code>; fade-to-clear plays</td></tr>
+  <tr><th>Test Oracle</th><td>BR2.1 &mdash; &ldquo;player is teleported to the selected skill world&rdquo; (note: implemented as local reposition, not scene load &mdash; Partially Met)</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>ST-02</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>ST-03: AI hint delivery during quiz</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>ST-03</td></tr>
+  <tr><th>Description</th><td>After an incorrect answer, player presses &ldquo;Ask AI&rdquo; and receives a context-aware hint from the robot</td></tr>
+  <tr><th>Preconditions</th><td>Quiz in progress; player has answered incorrectly; AI assists remaining &gt; 0</td></tr>
+  <tr><th>Input(s)</th><td>Click &ldquo;Ask AI&rdquo; button</td></tr>
+  <tr><th>Expected Output</th><td><code>RobotHintAI.RequestHint()</code> called with current question context; LLM generates response; robot speech bubble displays hint text; TTS speaks the hint; hint does not reveal the full answer</td></tr>
+  <tr><th>Test Oracle</th><td>BR8.1 &mdash; &ldquo;AI Orb provides a brief voice prompt offering guidance without revealing the full solution&rdquo;</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>ST-03</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>ST-04: Cauldron puzzle end-to-end</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>ST-04</td></tr>
+  <tr><th>Description</th><td>Player collects ingredients, interacts with cauldron, and receives win/fail feedback with adaptive hints</td></tr>
+  <tr><th>Preconditions</th><td>Fantasy world loaded; cauldron and ingredients present; robot available</td></tr>
+  <tr><th>Input(s)</th><td>Grab ingredients using PlayerGrab; interact with cauldron (E key or X button); submit ingredients</td></tr>
+  <tr><th>Expected Output</th><td>Correct recipe: success particles, robot congratulates. Wrong recipe: fail count incremented, adaptive hint given (Tier 1: error count, Tier 2: biome hint, Tier 3: pointing error)</td></tr>
+  <tr><th>Test Oracle</th><td>BR8.1 &mdash; tiered hint system; design specification for cauldron validation</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>ST-04</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>ST-05: Robot follows player via NavMesh</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>ST-05</td></tr>
+  <tr><th>Description</th><td>Robot NPC follows the player around the world using NavMesh pathfinding</td></tr>
+  <tr><th>Preconditions</th><td>Game running; player and robot in same world; NavMesh baked</td></tr>
+  <tr><th>Input(s)</th><td>Player moves to various positions in the world</td></tr>
+  <tr><th>Expected Output</th><td>Robot maintains proximity to player; speed scales with distance; robot does not get permanently stuck (warps to NavMesh if stuck)</td></tr>
+  <tr><th>Test Oracle</th><td>BR9.1 &mdash; &ldquo;the orb floats to the position of the player&rdquo;</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Output</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>ST-05</td><td>1</td><td class="result-placeholder">[Run in Unity and record]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h3>User Acceptance Test Cases</h3>
+
+<h4>UAT-01: Player completes a world quiz and understands their score</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UAT-01</td></tr>
+  <tr><th>User Story</th><td>BR3: &ldquo;As a player, I want to complete quizzes in each skill world so that I can test my understanding, reinforce what I have learned, and earn rewards that track my progress&rdquo;</td></tr>
+  <tr><th>Actor</th><td>End-user (college student, IBM SkillsBuild learner)</td></tr>
+  <tr><th>Steps</th><td>1. Start game, spawn in MainHub<br>2. Travel to Cyberpunk world via hoverboard<br>3. Enter quiz station<br>4. Read NPC intro greeting<br>5. Answer quiz questions<br>6. If wrong, use retry or ask AI for hint<br>7. Complete all questions<br>8. View results screen</td></tr>
+  <tr><th>Expected Outcome</th><td>User understands quiz topic, can read questions clearly, receives helpful feedback on wrong answers, sees final score, and feels a sense of completion</td></tr>
+  <tr><th>Test Oracle</th><td>BR3 acceptance criteria + end-user validation that experience is educational and engaging</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Outcome</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UAT-01</td><td>1</td><td class="result-placeholder">[Record user feedback]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UAT-02: Player receives helpful AI hints without frustration</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UAT-02</td></tr>
+  <tr><th>User Story</th><td>BR8: &ldquo;As a player, I want to receive hints when I get stuck so that I can avoid being frustrated and still progress with a feeling of achievement&rdquo;</td></tr>
+  <tr><th>Actor</th><td>End-user (learner unfamiliar with AI topics)</td></tr>
+  <tr><th>Steps</th><td>1. Enter a quiz<br>2. Deliberately answer incorrectly<br>3. Press &ldquo;Ask AI&rdquo; button<br>4. Read/listen to hint<br>5. Attempt question again using hint guidance</td></tr>
+  <tr><th>Expected Outcome</th><td>Hint is relevant to the specific question and wrong answer; hint guides without giving away the answer; user feels supported, not frustrated</td></tr>
+  <tr><th>Test Oracle</th><td>BR8.1, BR8.2 acceptance criteria + end-user subjective feedback</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Outcome</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UAT-02</td><td>1</td><td class="result-placeholder">[Record user feedback]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UAT-03: Player can navigate between hub and worlds</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UAT-03</td></tr>
+  <tr><th>User Story</th><td>BR2: &ldquo;As a player, I want to choose and travel from the hub to different skill worlds so that I can decide which skills to practise next&rdquo;</td></tr>
+  <tr><th>Actor</th><td>End-user (first-time player)</td></tr>
+  <tr><th>Steps</th><td>1. Spawn in MainHub<br>2. Look around to identify world stations<br>3. Travel to a station via hoverboard<br>4. Enter the station<br>5. Exit the station and return to hub</td></tr>
+  <tr><th>Expected Outcome</th><td>User can see all stations from spawn; hoverboard movement feels smooth; station entry/exit transitions are clear; user never feels lost</td></tr>
+  <tr><th>Test Oracle</th><td>BR1.1, BR1.2, BR2.1, BR2.3 acceptance criteria + end-user validation</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Outcome</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UAT-03</td><td>1</td><td class="result-placeholder">[Record user feedback]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<h4>UAT-04: Robot guide helps player in Fantasy world cauldron puzzle</h4>
+<table class="test-table">
+  <tr><th>Test ID</th><td>UAT-04</td></tr>
+  <tr><th>User Story</th><td>BR9: &ldquo;As a player, I want the AI Orb to guide me through the flow of the game so that I always know my next objective and can explore confidently without feeling lost&rdquo;</td></tr>
+  <tr><th>Actor</th><td>End-user (player exploring Fantasy world)</td></tr>
+  <tr><th>Steps</th><td>1. Enter Fantasy world<br>2. Find ingredients<br>3. Grab and collect ingredients<br>4. Robot escorts to cauldron<br>5. Submit ingredients<br>6. If wrong, observe robot&rsquo;s adaptive hint<br>7. Try again with corrected ingredients</td></tr>
+  <tr><th>Expected Outcome</th><td>Robot visibly leads the player; hints escalate in helpfulness; player eventually succeeds; experience feels cooperative</td></tr>
+  <tr><th>Test Oracle</th><td>BR9.1, BR9.2, BR8.1 acceptance criteria + end-user validation</td></tr>
+</table>
+
+<table>
+  <tr><th>Test ID</th><th>Cycle</th><th>Actual Outcome</th><th>Pass/Fail</th><th>Notes / Severity</th></tr>
+  <tr><td>UAT-04</td><td>1</td><td class="result-placeholder">[Record user feedback]</td><td class="result-placeholder">[Pass/Fail]</td><td class="result-placeholder">[Notes]</td></tr>
+</table>
+
+<div class="page-break"></div>
+
+<h2>4. Section 3: Testing Context (20%)</h2>
+
+<h3>Environment</h3>
+<table>
+  <tr><th>Item</th><th>Details</th></tr>
+  <tr><td><strong>OS</strong></td><td>macOS 14 Sonoma (development/testing); Android (Meta Quest deployment)</td></tr>
+  <tr><td><strong>VR Hardware</strong></td><td>Meta Quest 2/3 via Quest Link (editor testing) and APK sideload (device testing)</td></tr>
+  <tr><td><strong>Game Engine</strong></td><td>Unity 6000.3.3f1</td></tr>
+  <tr><td><strong>Browser(s)</strong></td><td>N/A &mdash; standalone VR application, not web-based</td></tr>
+  <tr><td><strong>Testing Frameworks</strong></td><td>Manual testing via Unity Play Mode and on-device VR testing. No formal automated unit test framework (e.g., Unity Test Framework / NUnit) was used. <code>LLMConsoleTester.cs</code> was used for ad-hoc LLM integration testing via Unity Editor context menu.</td></tr>
+  <tr><td><strong>Input Modes Tested</strong></td><td>VR controllers (Meta Quest) and keyboard/mouse (desktop mode via <code>GameSettings.isVR</code> flag)</td></tr>
+</table>
+
+<h3>Failure Severity Scale</h3>
+<table>
+  <tr><th>Severity</th><th>Definition</th><th>Examples from our project</th></tr>
+  <tr><td><strong>High</strong></td><td>System crashes or produces incorrect output that compromises core functionality</td><td>Incorrect quiz scoring; cauldron not detecting ingredients; robot permanently stuck; player unable to progress; LLM returning no response</td></tr>
+  <tr><td><strong>Low</strong></td><td>Minor inconvenience that does not affect functionality</td><td>UI misalignment; typewriter animation timing; speech bubble positioning slightly off; visual glitch that doesn&rsquo;t block gameplay</td></tr>
+</table>
+
+<h2>5. Section 4: Summary and Reflection on Test Quality (10%)</h2>
+
+<div class="info">
+<strong>Template &mdash; fill in after running all tests:</strong>
+</div>
+
+<h3>What to write:</h3>
+
+<p><strong>1. Results summary:</strong> &ldquo;We executed X unit tests, Y system tests, and Z UAT tests. Of these, A passed and B failed.&rdquo;</p>
+
+<p><strong>2. Equivalence classes used:</strong></p>
+<ul>
+  <li>Quiz answers: correct index vs incorrect indices (UT-02, UT-03)</li>
+  <li>Score comparison: new score &gt; best, new score &le; best, first score for world (UT-04, UT-05)</li>
+  <li>Inventory state: empty vs non-empty (UT-06)</li>
+  <li>Cauldron ingredients: all correct vs any wrong vs too few (UT-07)</li>
+  <li>JSON input: valid file vs missing file vs malformed file (UT-01)</li>
+</ul>
+
+<p><strong>3. Coverage gaps (be honest):</strong></p>
+<ul>
+  <li>No automated unit tests &mdash; all testing was manual</li>
+  <li>LLM responses are non-deterministic, so AI hint quality cannot be deterministically verified</li>
+  <li>VR-specific interactions (grabbing, throwing) are difficult to automate and were tested manually on-device</li>
+  <li>Some BRs marked &ldquo;Partially Met&rdquo; in Section 2.1 (e.g., BR2.1 uses local reposition, not scene load) &mdash; tests reflect actual behaviour</li>
+  <li>Multiplayer (BR5.6) and advanced AI emotional modelling (BR9.3) are &ldquo;Will Not Have&rdquo; and were not tested</li>
+</ul>
+
+<p><strong>4. Critical failures and resolution:</strong> List any High severity failures found during testing and whether they were fixed (Cycle 2) or remain known issues.</p>
+
+<p><strong>5. Lessons learned:</strong> &ldquo;In future, we would integrate Unity Test Framework earlier to enable automated regression testing, particularly for the quiz scoring and inventory logic.&rdquo;</p>
+
+<div class="page-break"></div>
+
+<h2>6. Task Assignment</h2>
+
+<table class="assignment-table">
+  <tr><th>Team Member</th><th>Assigned Test Cases</th><th>Rationale</th></tr>
+  <tr><td>Palak<br>(AI Integration)</td><td>UT-01, UT-02, UT-03, ST-03<br>Testing Context section</td><td>Owns quiz system and AI integration</td></tr>
+  <tr><td>Renan<br>(AI &amp; Backend)</td><td>UT-07, UT-08, ST-04, ST-05, UAT-04</td><td>Owns cauldron, robot escort, adaptive hints</td></tr>
+  <tr><td>Erica<br>(UX Design)</td><td>UAT-01, UAT-02, UAT-03<br>Summary &amp; Reflection section</td><td>Leads user testing sessions</td></tr>
+  <tr><td>Iustin<br>(VR Environment)</td><td>UT-06, ST-01, ST-02</td><td>Owns VR setup, stations, player movement</td></tr>
+  <tr><td>Ruixi<br>(Visual Design)</td><td>UT-04, UT-05<br>UAT feedback collection</td><td>Assists with user testing feedback</td></tr>
+</table>
+
+<h3>What each person must do:</h3>
+<ol>
+  <li><strong>Write</strong> your assigned test case definitions (use the templates above)</li>
+  <li><strong>Run</strong> the tests in Unity (Play Mode or on Quest headset)</li>
+  <li><strong>Record</strong> the actual output in the results tables &mdash; be specific</li>
+  <li><strong>If a test fails:</strong> note the severity (High/Low), fix the bug, and run <strong>Cycle 2</strong></li>
+  <li><strong>Submit</strong> your completed test cases to be compiled into the final report</li>
+</ol>
+
+<div class="highlight">
+<strong>Deadline reminder:</strong> Each person should complete their assigned test cases and results <em>before</em> the final report compilation. The results tables with red placeholder text must be filled in with real data from actual test runs.
+</div>
+
+<hr style="margin-top: 40px;">
+<p style="text-align: center; color: #888; font-size: 9pt;">
+  VrBimBumBam &mdash; Group 27 &mdash; COMP2281 Software Engineering &mdash; Test Report Writing Guide
+</p>
+
+</body>
+</html>
