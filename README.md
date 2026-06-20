@@ -10,10 +10,10 @@
   Erica Da Silva &bull; Renan Sho Marie &bull; Petru Iustin &bull; Ruixi Yang &bull; Palak Shah
 </p>
 
-<img src="assets/image1.png" alt="Overview of the virtual environment" width="800" />
+<img src="docs/image1.jpg" alt="Overview of the virtual environment" width="800" />
 <br />
 <br />
-<img src="assets/image2.png" alt="Virtual robot assistant" width="800" />
+<img src="docs/image2.png" alt="Virtual robot assistant" width="800" />
 
 </div>
 
