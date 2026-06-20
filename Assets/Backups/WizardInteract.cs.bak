@@ -1,0 +1,210 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+using System.Collections;
+
+public class WizardInteract : MonoBehaviour
+{
+    [Header("References")]
+    [SerializeField] private Transform playerCamera;
+    [SerializeField] private Transform wizardTransform;
+    [SerializeField] private SpeechBubble wizardSpeechBubble;
+    [SerializeField] private PiperSpeakerComponent piperTTS;
+    [SerializeField] private PuterSpeaker puterTTS;
+
+    [Header("Interaction")]
+    [SerializeField] private float interactRange = 5f;
+    [SerializeField] private float interactAngle = 30f;
+
+    [Header("Audio")]
+    public string wizardVoice = "en_US-ryan-high.onnx";
+    public string wizardPuterVoiceId = "onyx"; // OpenAI wizard-like voice
+
+    [Header("Cooldown")]
+    [SerializeField] private float cooldown = 3f;
+
+    private float lastInteractTime = -999f;
+    private bool introComplete = false;
+    private bool isSpeaking = false;
+    private System.Action introCallback;
+
+    public SpeechBubble SpeechBubble => wizardSpeechBubble;
+
+    private void Awake()
+    {
+        if (piperTTS == null) piperTTS = GetComponentInChildren<PiperSpeakerComponent>();
+        if (puterTTS == null) puterTTS = GetComponentInChildren<PuterSpeaker>();
+        
+        if (piperTTS != null) _ = piperTTS.SetVoiceModel(wizardVoice);
+        if (puterTTS != null) puterTTS.SetVoice("openai", "tts-1", wizardPuterVoiceId);
+
+        if (piperTTS == null && puterTTS == null)
+        {
+            Debug.LogError($"[WizardInteract] CRITICAL: No TTS component (Piper or Puter) found for the Wizard on {gameObject.name}. He will be silent!");
+        }
+        else
+        {
+            Debug.Log($"[WizardInteract] Initialized with Piper: {piperTTS != null}, Puter: {puterTTS != null}");
+        }
+    }
+
+    public void SetIntroCallback(System.Action onComplete)
+    {
+        introCallback = onComplete;
+    }
+
+    public void OnInteract(InputAction.CallbackContext context)
+    {
+        if (!context.started) return;
+        if (!enabled) return;
+        if (isSpeaking) return;
+        if (wizardSpeechBubble == null || playerCamera == null || wizardTransform == null) return;
+        if (Time.time - lastInteractTime < cooldown) return;
+        if (!IsLookingAtWizard()) return;
+
+        lastInteractTime = Time.time;
+
+        if (!introComplete)
+        {
+            StartCoroutine(GreetingSequence());
+        }
+        else
+        {
+            GiveContextualLine();
+        }
+    }
+
+    private bool IsLookingAtWizard()
+    {
+        Vector3 dirToWizard = (wizardTransform.position - playerCamera.position).normalized;
+        float angle = Vector3.Angle(playerCamera.forward, dirToWizard);
+        float distance = Vector3.Distance(playerCamera.position, wizardTransform.position);
+
+        return angle < interactAngle && distance < interactRange;
+    }
+
+    private IEnumerator SayWithVoice(string[] lines, System.Action onDone)
+    {
+        isSpeaking = true;
+        foreach (string line in lines)
+        {
+            // Prefer Piper for the specific 'Wizard' voice if it's assigned,
+            // otherwise try Puter, otherwise fallback to Piper's first voice.
+            if (piperTTS != null) 
+                piperTTS.Speak(line);
+            else if (puterTTS != null) 
+                puterTTS.Speak(line);
+            else
+                Debug.LogWarning($"[WizardInteract] System is trying to speak line '{line}' but no TTS was found!");
+
+            bool lineDone = false;
+            wizardSpeechBubble.Say(new string[] { line }, () => lineDone = true);
+
+            yield return new WaitUntil(() => lineDone);
+        }
+        isSpeaking = false;
+        onDone?.Invoke();
+    }
+
+    private IEnumerator GreetingSequence()
+    {
+        bool done = false;
+        yield return StartCoroutine(SayWithVoice(new string[]
+        {
+            "Ah, a visitor! And you brought your little robot friend.",
+            "I am Zaldric, guardian of this realm.",
+            "Our dragon has fallen terribly ill...",
+            "I need seven ingredients to brew a healing potion.",
+            "Each ingredient is hidden at a station across this land.",
+            "At each station you will find a book with a question.",
+            "Choose the ingredient that matches your answer.",
+            "Then give it to your companion for safekeeping.",
+            "Once you have all seven, bring them to the cauldron.",
+            "But be warned... I can only tell you how many are wrong.",
+            "Not which ones. You must trust your knowledge.",
+            "Now go! The dragon does not have much time."
+        }, () => done = true));
+
+        introComplete = true;
+        introCallback?.Invoke();
+        introCallback = null;
+    }
+
+    private void GiveContextualLine()
+    {
+        int collected = IngredientTracker.Instance != null
+            ? IngredientTracker.Instance.TotalCollected
+            : 0;
+
+        if (FantasyWorldManager.worldComplete)
+        {
+            string[] lines = {
+                "You did it! The dragon is healing as we speak.",
+                "I knew you had it in you. The realm is in your debt.",
+                "The potion worked perfectly. Thank you, adventurer."
+            };
+            StartCoroutine(SayWithVoice(new string[] { lines[Random.Range(0, lines.Length)] }, null));
+            return;
+        }
+
+        if (collected >= 7)
+        {
+            string[] lines = {
+                "You have all seven! Hurry to the cauldron!",
+                "The ingredients are gathered. The cauldron awaits!",
+                "Quick, to the cauldron! The dragon grows weaker."
+            };
+            StartCoroutine(SayWithVoice(new string[] { lines[Random.Range(0, lines.Length)] }, null));
+        }
+        else if (collected > 0)
+        {
+            string[] lines = {
+                $"You have {collected} ingredients so far. Keep searching!",
+                $"The dragon stirs... {collected} down, {7 - collected} to go.",
+                $"Good progress. {7 - collected} more ingredients needed."
+            };
+            StartCoroutine(SayWithVoice(new string[] { lines[Random.Range(0, lines.Length)] }, null));
+        }
+        else
+        {
+            string[] lines = {
+                "The stations are scattered across the land. Look for them!",
+                "Hurry adventurer, the dragon grows weaker by the minute.",
+                "Each station has a book with a question. Choose wisely."
+            };
+            StartCoroutine(SayWithVoice(new string[] { lines[Random.Range(0, lines.Length)] }, null));
+        }
+    }
+
+    public void SayFailResult(int wrongCount, int total)
+    {
+        string[] lines;
+
+        if (wrongCount == 1)
+        {
+            lines = new string[]
+            {
+                "So close! Just one ingredient was wrong.",
+                "You can do this. Go back and reconsider."
+            };
+        }
+        else if (wrongCount <= 3)
+        {
+            lines = new string[]
+            {
+                $"Hmm... {wrongCount} of those ingredients do not belong.",
+                "You are close though. Think carefully and try again."
+            };
+        }
+        else
+        {
+            lines = new string[]
+            {
+                $"Oh dear... {wrongCount} ingredients were wrong.",
+                "Perhaps revisit the books at each station.",
+                "Take your time. The answers are all there."
+            };
+        }
+
+        StartCoroutine(SayWithVoice(lines, null));
+    }
+}

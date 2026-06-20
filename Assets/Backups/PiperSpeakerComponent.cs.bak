@@ -1,0 +1,203 @@
+using UnityEngine;
+using System.Collections;
+using System.IO;
+using System.Threading.Tasks;
+using Abuksigun.Piper;
+
+/// <summary>
+/// A wrapper for the UnityPiper package to provide offline TTS.
+/// </summary>
+public class PiperSpeakerComponent : MonoBehaviour
+{
+    [Header("Audio Settings")]
+    public AudioSource audioSource;
+    public string voiceModelName = "en_GB-semaine-medium.onnx";
+    public string espeakDataName = "espeak-ng-2023.9.7-4";
+
+    private Piper piper;
+    private PiperVoice piperVoice;
+    private PiperSpeaker piperSpeaker;
+    private bool isInitialized = false;
+    private bool _isInitializing = false;
+
+    private void Awake()
+    {
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+    }
+
+    private async Task EnsureInitialized()
+    {
+        if (isInitialized || _isInitializing) return;
+        _isInitializing = true;
+
+        try
+        {
+            // Dispose previous if we're re-initializing
+            if (piperSpeaker != null) piperSpeaker = null;
+            if (piperVoice != null) { piperVoice.Dispose(); piperVoice = null; }
+            if (piper != null) { piper.Dispose(); piper = null; }
+
+            // Use forward slashes for native path safety
+            string streamingPath = Application.streamingAssetsPath.Replace("\\", "/");
+            string espeakPath = Path.Combine(streamingPath, espeakDataName).Replace("\\", "/");
+            string voicesPath = Path.Combine(streamingPath, "Voices").Replace("\\", "/");
+            string modelPath = Path.Combine(voicesPath, voiceModelName).Replace("\\", "/");
+
+            Debug.Log($"[PiperTTS] ({gameObject.name}) Attempting initialization. \nEspeak: {espeakPath}\nTarget Model: {modelPath}");
+
+            if (!Directory.Exists(espeakPath))
+            {
+                Debug.LogError($"[PiperTTS] ({gameObject.name}) FOLDER NOT FOUND: {espeakPath}. Audio will be silent.");
+                _isInitializing = false;
+                return;
+            }
+
+            // --- MODEL & DESCRIPTOR VALIDATION ---
+            bool modelExists = File.Exists(modelPath);
+            bool descriptorExists = modelExists && File.Exists(modelPath + ".json");
+            string actualModelToLoad = modelPath;
+
+            if (!modelExists || !descriptorExists)
+            {
+                string reason = !modelExists ? "Model (.onnx) missing" : "Descriptor (.json) missing";
+                Debug.LogWarning($"[PiperTTS] ({gameObject.name}) {reason} for '{voiceModelName}'. Searching for ANY available voice...");
+
+                // AUTO-FALLBACK: Find the FIRST available onnx file in the Voices folder
+                if (Directory.Exists(voicesPath))
+                {
+                    string[] availableModels = Directory.GetFiles(voicesPath, "*.onnx");
+                    string foundModel = null;
+                    foreach (var m in availableModels)
+                    {
+                        if (File.Exists(m + ".json")) { foundModel = m; break; }
+                    }
+
+                    if (!string.IsNullOrEmpty(foundModel))
+                    {
+                        actualModelToLoad = foundModel.Replace("\\", "/");
+                        Debug.Log($"[PiperTTS] ({gameObject.name}) Auto-fallback to found voice: {Path.GetFileName(actualModelToLoad)}");
+                    }
+                    else
+                    {
+                        Debug.LogError($"[PiperTTS] ({gameObject.name}) No valid voice (onnx + json pair) found in {voicesPath}. Audio will be silent.");
+                        _isInitializing = false;
+                        return;
+                    }
+                }
+                else
+                {
+                    Debug.LogError($"[PiperTTS] ({gameObject.name}) Voices folder not found at {voicesPath}. Audio will be silent.");
+                    _isInitializing = false;
+                    return;
+                }
+            }
+
+            // --- ES-PEAK DATA VALIDATION ---
+            // The espeak-ng-data folder MUST contain binary tables (phondata, phontab, etc.)
+            string dataSubFolder = Path.Combine(espeakPath, "espeak-ng-data").Replace("\\", "/");
+            string phondataFile = Path.Combine(dataSubFolder, "phondata").Replace("\\", "/");
+
+            if (!File.Exists(phondataFile))
+            {
+                Debug.LogError($"[PiperTTS] ({gameObject.name}) CRITICAL ERROR: Missing compiled binary data at {phondataFile}.\n" +
+                               "You MUST download the 'Binary Data' version of espeak-ng.");
+                _isInitializing = false;
+                return;
+            }
+
+            // Model path was already validated and potential fallbacks applied above.
+            Debug.Log($"[PiperTTS] ({gameObject.name}) Initializing engine with path: {espeakPath}");
+            piper = await Piper.LoadPiper(espeakPath);
+            
+            Debug.Log($"[PiperTTS] ({gameObject.name}) Loading voice model: {actualModelToLoad}");
+            piperVoice = await PiperVoice.LoadPiperVoice(piper, actualModelToLoad);
+            
+            // PiperSpeaker constructor calls AudioClip.Create, which MUST be on the main thread.
+            piperSpeaker = new PiperSpeaker(piperVoice);
+            isInitialized = true;
+            Debug.Log($"[PiperTTS] ({gameObject.name}) Offline voice system initialized successfully with {Path.GetFileName(actualModelToLoad)}!");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"[PiperTTS] ({gameObject.name}) Native Crash prevented! Error: {ex.Message}\n{ex.StackTrace}");
+        }
+        finally
+        {
+            _isInitializing = false;
+        }
+    }
+
+    /// <summary>
+    /// Changes the voice model and re-initializes the speaker.
+    /// </summary>
+    public async Task SetVoiceModel(string modelName)
+    {
+        if (voiceModelName == modelName && isInitialized) return;
+
+        voiceModelName = modelName;
+        isInitialized = false; // Force re-initialization
+        await EnsureInitialized();
+    }
+
+    /// <summary>
+    /// Speaks text using the offline Piper engine.
+    /// </summary>
+    public async void Speak(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+        
+        while (_isInitializing) await Task.Delay(100);
+
+        if (!isInitialized)
+        {
+            await EnsureInitialized();
+        }
+
+        if (isInitialized && piperSpeaker != null)
+        {
+            Debug.Log($"[PiperTTS] ({gameObject.name}) Generating speech for: \"{text}\"");
+            
+            try 
+            {
+                // Start the generation (non-blocking for immediate audio streaming)
+                var task = piperSpeaker.Speak(text);
+                
+                if (audioSource != null)
+                {
+                    audioSource.clip = piperSpeaker.AudioClip;
+                    audioSource.loop = true; // CRITICAL: Must be true for procedural "stream" clips
+                    
+                    // Ensure volume is audible
+                    if (audioSource.volume < 0.1f) audioSource.volume = 1.0f;
+                    
+                    if (!audioSource.isPlaying)
+                    {
+                        Debug.Log($"[PiperTTS] ({gameObject.name}) Starting AudioSource playback.");
+                        audioSource.Play();
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning($"[PiperTTS] ({gameObject.name}) No AudioSource assigned! You won't hear anything.");
+                }
+
+                await task;
+                Debug.Log($"[PiperTTS] ({gameObject.name}) Generation task completed for: \"{text}\"");
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"[PiperTTS] ({gameObject.name}) Error during speech generation: {ex.Message}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[PiperTTS] ({gameObject.name}) Speak called but system is not ready. Initialized: {isInitialized}, Speaker: {piperSpeaker != null}");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        piperVoice?.Dispose();
+        piper?.Dispose();
+    }
+}
