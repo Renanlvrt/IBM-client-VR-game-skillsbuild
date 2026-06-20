@@ -1,0 +1,121 @@
+{
+  "world_id": "pirate",
+  "description": "This world explores the fundamentals of AI Agents, their types, use cases, and workflows.",
+  "lore": [
+    "This world introduces learners to the concept of AI Agents.",
+    "Students learn about different types of AI agents and their characteristics.",
+    "Real-world use cases illustrate how AI agents enhance applications.",
+    "The AI agent workflow highlights key steps in agent operation.",
+    "The difficulty level is beginner-friendly, designed for foundational understanding."
+  ],
+  "npcs": {
+    "rook": {
+      "role": "AI Agent Strategist and Ship Captain",
+      "personality": "Confident, pragmatic, and strategic. Captain Rook explains AI agents using clear analogies drawn from commanding a crew, assigning tasks, and navigating complex missions. Direct but approachable.",
+      "rules": [
+        "Explain AI agents using task delegation and decision-making analogies",
+        "Focus on clarity and structure rather than technical jargon",
+        "Relate agent behavior to real-world workflows",
+        "Avoid overly theatrical or cartoonish language",
+        "Encourage understanding of how agents coordinate actions"
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": "ai_agents_001",
+      "question_type": "multiple_choice",
+      "question": "A streaming platform aims to enhance user experience by offering content suggestions tailored to individual tastes. The AI agent analyzes watch history, user preferences, and interaction patterns to refine its recommendations over time. Which use case of AI agents does this example illustrate?",
+      "options": [
+        "Process automation",
+        "Personalization",
+        "Fraud detection",
+        "Virtual assistance"
+      ],
+      "correct_answer": "Personalization",
+      "topic": "AI Agent Use Cases",
+      "learning_goal": "Understand how AI agents are used for personalization based on user behavior.",
+      "common_wrong_answers": [
+        "Process automation",
+        "Virtual assistance",
+        "Fraud detection"
+      ]
+    },
+    {
+      "id": "ai_agents_002",
+      "question_type": "multiple_choice",
+      "question": "An education platform uses an AI agent to customize learning experiences for students based on their progress. It detects areas where a student struggles, adjusts explanations, and modifies lesson difficulty in response to performance. Which type of AI agent is used by this education platform?",
+      "options": [
+        "Learning AI agent",
+        "Reactive AI system",
+        "Goal-based AI agent",
+        "Utility-based AI agent"
+      ],
+      "correct_answer": "Learning AI agent",
+      "topic": "Types of AI Agents",
+      "learning_goal": "Identify characteristics of learning AI agents that improve performance over time.",
+      "common_wrong_answers": [
+        "Reactive AI system",
+        "Goal-based AI agent",
+        "Utility-based AI agent"
+      ]
+    },
+    {
+      "id": "ai_agents_003",
+      "question_type": "multiple_choice",
+      "question": "A self-driving car continuously monitors road conditions and changing traffic patterns throughout the day. Over time, it becomes more efficient at anticipating congestion and adjusting routes to avoid delays. Which step in the AI agent workflow helps it improve performance over time?",
+      "options": [
+        "Make decisions",
+        "Learn and improve",
+        "Interpret the environment",
+        "Execute an action"
+      ],
+      "correct_answer": "Learn and improve",
+      "topic": "AI Agent Workflow",
+      "learning_goal": "Understand how learning enables AI agents to improve performance over time.",
+      "common_wrong_answers": [
+        "Make decisions",
+        "Interpret the environment",
+        "Execute an action"
+      ]
+    },
+    {
+      "id": "ai_agents_004",
+      "question_type": "multiple_choice",
+      "question": "An airline uses an AI system that dynamically adjusts ticket prices based on demand, seasonality, and seat availability. Prices fluctuate in real time to optimize both revenue and customer affordability. What type of AI agent is used in this scenario?",
+      "options": [
+        "Utility-based AI agent",
+        "Rule-based AI system",
+        "Goal-based AI agent",
+        "Learning AI agent"
+      ],
+      "correct_answer": "Utility-based AI agent",
+      "topic": "Types of AI Agents",
+      "learning_goal": "Understand how utility-based agents optimize outcomes based on defined utility functions.",
+      "common_wrong_answers": [
+        "Rule-based AI system",
+        "Goal-based AI agent",
+        "Learning AI agent"
+      ]
+    },
+    {
+      "id": "ai_agents_005",
+      "question_type": "multiple_choice",
+      "question": "An AI agent email filtering system receives incoming messages and examines the content, sender information, and message structure to determine if an email is spam or legitimate. Which step is the AI agent performing in this scenario?",
+      "options": [
+        "Interpret the environment",
+        "Learn and improve",
+        "Plan and execute an action",
+        "Process input data"
+      ],
+      "correct_answer": "Interpret the environment",
+      "topic": "AI Agent Workflow",
+      "learning_goal": "Understand how AI agents interpret inputs from their environment before making decisions.",
+      "common_wrong_answers": [
+        "Process input data",
+        "Plan and execute an action",
+        "Learn and improve"
+      ]
+    }
+  ]
+}

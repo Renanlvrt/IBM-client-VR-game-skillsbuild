@@ -1,0 +1,598 @@
+{
+    "entries": [
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "What is the main purpose of writing a detailed prompt in the Instructions tab when setting up the Personal Health Advisor agent?",
+            "options": [
+                "To configure fallback options in case of tool failure.",
+                "To train the model to improve performance on fitness datasets.",
+                "To store user preferences securely for future queries.",
+                "To clearly define the agent’s tasks and how it interacts with users."
+            ],
+            "correctAnswer": "To clearly define the agent’s tasks and how it interacts with users."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is a hosted runtime used in Google Colab during the AI agent setup?",
+            "options": [
+                "To write and execute code using Google’s cloud infrastructure.",
+                "To store notebooks securely on GitHub.",
+                "To enable access to local system resources.",
+                "To block third-party libraries from being installed."
+            ],
+            "correctAnswer": "To write and execute code using Google’s cloud infrastructure."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "After creating a Replicate account, you’re directed to the dashboard to generate an API token. Why is this Replicate API token necessary when working in a Colab notebook?",
+            "options": [
+                "To store model outputs from Replicate in your local system.",
+                "To let the notebook call Replicate models securely while running.",
+                "To export AI agent data directly to your Replicate account.",
+                "To update Replicate models from within Google Colab."
+            ],
+            "correctAnswer": "To let the notebook call Replicate models securely while running."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is tool calling used while evaluating an AI agent’s performance?",
+            "options": [
+                "It enables the agent to edit its own prompt for better accuracy.",
+                "It allows the agent to display code outputs in the notebook.",
+                "It enables the agent to use pre-defined tools to answer specific questions.",
+                "It helps the agent ask follow-up questions to the user."
+            ],
+            "correctAnswer": "It enables the agent to use pre-defined tools to answer specific questions."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why do you need a Replicate account when setting up the environment for your agent?",
+            "options": [
+                "To run AI models without the need for advanced hardware.",
+                "To save the Colab notebook in the cloud.",
+                "To track version history of your Jupyter notebooks.",
+                "To enable offline access to GitHub repositories."
+            ],
+            "correctAnswer": "To run AI models without the need for advanced hardware."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "What aspects of the agent's responses are evaluated using MLflow?",
+            "options": [
+                "Response time and storage usage",
+                "User engagement metrics and API latency",
+                "Accuracy, clarity, and relevance of final responses",
+                "Model training metrics and system resource usage"
+            ],
+            "correctAnswer": "Accuracy, clarity, and relevance of final responses"
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "You enable tools such as Google Search and WebCrawler in your agent setup. What key functionality do these tools provide for the Personal Health Advisor agent?",
+            "options": [
+                "Allow access to APIs for fitness tracking devices.",
+                "Enable voice-based interaction with external assistants.",
+                "Allow real-time access to context, such as weather or user location.",
+                "Enable auto-correction for inaccurate user entries."
+            ],
+            "correctAnswer": "Allow real-time access to context, such as weather or user location."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "What is the main purpose of writing a detailed prompt in the Instructions tab when setting up the Personal Health Advisor agent?",
+            "options": [
+                "To configure fallback options in case of tool failure.",
+                "To train the model to improve performance on fitness datasets.",
+                "To store user preferences securely for future queries.",
+                "To clearly define the agent’s tasks and how it interacts with users."
+            ],
+            "correctAnswer": "To clearly define the agent’s tasks and how it interacts with users."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is a hosted runtime used in Google Colab during the AI agent setup?",
+            "options": [
+                "To write and execute code using Google’s cloud infrastructure.",
+                "To store notebooks securely on GitHub.",
+                "To enable access to local system resources.",
+                "To block third-party libraries from being installed."
+            ],
+            "correctAnswer": "To write and execute code using Google’s cloud infrastructure."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "After creating a Replicate account, you’re directed to the dashboard to generate an API token. Why is this Replicate API token necessary when working in a Colab notebook?",
+            "options": [
+                "To store model outputs from Replicate in your local system.",
+                "To let the notebook call Replicate models securely while running.",
+                "To export AI agent data directly to your Replicate account.",
+                "To update Replicate models from within Google Colab."
+            ],
+            "correctAnswer": "To let the notebook call Replicate models securely while running."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why do you need a Replicate account when setting up the environment for your agent?",
+            "options": [
+                "To run AI models without the need for advanced hardware.",
+                "To save the Colab notebook in the cloud.",
+                "To track version history of your Jupyter notebooks.",
+                "To enable offline access to GitHub repositories."
+            ],
+            "correctAnswer": "To run AI models without the need for advanced hardware."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "In the model configuration step, you select the llama-3-3-70b-instruct model for your Personal Health Advisor agent. Why do you select this model?",
+            "options": [
+                "The llama-3-3-70b-instruct model supports multilingual summarization and rapid indexing.",
+                "The llama-3-3-70b-instruct model offers prebuilt responses for health-related scenarios.",
+                "The llama-3-3-70b-instruct model is optimized for structured data pipelines.",
+                "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+            ],
+            "correctAnswer": "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "You enable tools such as Google Search and WebCrawler in your agent setup. What key functionality do these tools provide for the Personal Health Advisor agent?",
+            "options": [
+                "Allow access to APIs for fitness tracking devices.",
+                "Enable voice-based interaction with external assistants.",
+                "Allow real-time access to context, such as weather or user location.",
+                "Enable auto-correction for inaccurate user entries."
+            ],
+            "correctAnswer": "Allow real-time access to context, such as weather or user location."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is a hosted runtime used in Google Colab during the AI agent setup?",
+            "options": [
+                "To write and execute code using Google’s cloud infrastructure.",
+                "To store notebooks securely on GitHub.",
+                "To enable access to local system resources.",
+                "To block third-party libraries from being installed."
+            ],
+            "correctAnswer": "To write and execute code using Google’s cloud infrastructure."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "After creating a Replicate account, you’re directed to the dashboard to generate an API token. Why is this Replicate API token necessary when working in a Colab notebook?",
+            "options": [
+                "To store model outputs from Replicate in your local system.",
+                "To let the notebook call Replicate models securely while running.",
+                "To export AI agent data directly to your Replicate account.",
+                "To update Replicate models from within Google Colab."
+            ],
+            "correctAnswer": "To let the notebook call Replicate models securely while running."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "In the model configuration step, you select the llama-3-3-70b-instruct model for your Personal Health Advisor agent. Why do you select this model?",
+            "options": [
+                "The llama-3-3-70b-instruct model supports multilingual summarization and rapid indexing.",
+                "The llama-3-3-70b-instruct model offers prebuilt responses for health-related scenarios.",
+                "The llama-3-3-70b-instruct model is optimized for structured data pipelines.",
+                "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+            ],
+            "correctAnswer": "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is a hosted runtime used in Google Colab during the AI agent setup?",
+            "options": [
+                "To write and execute code using Google’s cloud infrastructure.",
+                "To store notebooks securely on GitHub.",
+                "To enable access to local system resources.",
+                "To block third-party libraries from being installed."
+            ],
+            "correctAnswer": "To write and execute code using Google’s cloud infrastructure."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why do you need a Replicate account when setting up the environment for your agent?",
+            "options": [
+                "To run AI models without the need for advanced hardware.",
+                "To save the Colab notebook in the cloud.",
+                "To track version history of your Jupyter notebooks.",
+                "To enable offline access to GitHub repositories."
+            ],
+            "correctAnswer": "To run AI models without the need for advanced hardware."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "In the model configuration step, you select the llama-3-3-70b-instruct model for your Personal Health Advisor agent. Why do you select this model?",
+            "options": [
+                "The llama-3-3-70b-instruct model supports multilingual summarization and rapid indexing.",
+                "The llama-3-3-70b-instruct model offers prebuilt responses for health-related scenarios.",
+                "The llama-3-3-70b-instruct model is optimized for structured data pipelines.",
+                "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+            ],
+            "correctAnswer": "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why is tool calling used while evaluating an AI agent’s performance?",
+            "options": [
+                "It enables the agent to edit its own prompt for better accuracy.",
+                "It allows the agent to display code outputs in the notebook.",
+                "It enables the agent to use pre-defined tools to answer specific questions.",
+                "It helps the agent ask follow-up questions to the user."
+            ],
+            "correctAnswer": "It enables the agent to use pre-defined tools to answer specific questions."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "Why do you need a Replicate account when setting up the environment for your agent?",
+            "options": [
+                "To run AI models without the need for advanced hardware.",
+                "To save the Colab notebook in the cloud.",
+                "To track version history of your Jupyter notebooks.",
+                "To enable offline access to GitHub repositories."
+            ],
+            "correctAnswer": "To run AI models without the need for advanced hardware."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "What aspects of the agent's responses are evaluated using MLflow?",
+            "options": [
+                "Response time and storage usage",
+                "User engagement metrics and API latency",
+                "Accuracy, clarity, and relevance of final responses",
+                "Model training metrics and system resource usage"
+            ],
+            "correctAnswer": "Accuracy, clarity, and relevance of final responses"
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "When deploying your agent to AgentSpace, how can you confirm the agent is ready for user testing?",
+            "options": [
+                "A test prompt automatically launches in full-screen view.",
+                "The AgentSpace icon displays a green verification badge.",
+                "The deployment tab displays the \"Draft\" status.",
+                "The status changes to \"Deployed\" and the type shows \"Online\"."
+            ],
+            "correctAnswer": "The status changes to \"Deployed\" and the type shows \"Online\"."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "While setting up your project in Agent Lab, you encounter a message stating \"No watsonx Runtime service detected\". How should you proceed with agent configuration?",
+            "options": [
+                "Create a new watsonx.ai runtime environment and associate it with the project.",
+                "Restart the Agent Lab environment to refresh service detection.",
+                "Select a different region to bypass the runtime error.",
+                "Enable the Preview mode to bypass the runtime check."
+            ],
+            "correctAnswer": "Create a new watsonx.ai runtime environment and associate it with the project."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "In the model configuration step, you select the llama-3-3-70b-instruct model for your Personal Health Advisor agent. Why do you select this model?",
+            "options": [
+                "The llama-3-3-70b-instruct model supports multilingual summarization and rapid indexing.",
+                "The llama-3-3-70b-instruct model offers prebuilt responses for health-related scenarios.",
+                "The llama-3-3-70b-instruct model is optimized for structured data pipelines.",
+                "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+            ],
+            "correctAnswer": "The llama-3-3-70b-instruct model is designed for instruction-following and interactive tasks."
+        },
+        {
+            "worldId": "cyberpunk",
+            "question": "You enable tools such as Google Search and WebCrawler in your agent setup. What key functionality do these tools provide for the Personal Health Advisor agent?",
+            "options": [
+                "Allow access to APIs for fitness tracking devices.",
+                "Enable voice-based interaction with external assistants.",
+                "Allow real-time access to context, such as weather or user location.",
+                "Enable auto-correction for inaccurate user entries."
+            ],
+            "correctAnswer": "Allow real-time access to context, such as weather or user location."
+        }
+    ]
+}

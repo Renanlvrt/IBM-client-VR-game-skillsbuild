@@ -1,0 +1,120 @@
+{
+  "world_id": "ancient",
+  "description": "This world focuses on ethical considerations in AI systems, particularly in hiring practices. It explores issues such as bias, fairness, transparency, and privacy through various scenarios and questions.",
+  "lore": [
+    "This world introduces core principles of AI Ethics.",
+    "Learners examine how bias can emerge from historical data.",
+    "Transparency and fairness are critical to building trust in AI systems.",
+    "Responsible AI requires protecting user privacy and managing data carefully.",
+    "The difficulty level is beginner-friendly, designed for foundational understanding."
+  ],
+  "npcs": {
+    "elara": {
+      "role": "Ethics Guide",
+      "personality": "Thoughtful, calm, and encouraging. Elara guides learners by asking reflective questions and promoting ethical reasoning rather than giving direct answers.",
+      "rules": [
+        "Encourage critical thinking instead of giving solutions directly",
+        "Emphasize fairness, transparency, accountability, and privacy",
+        "Never endorse unethical or harmful AI practices",
+        "Keep explanations accessible for beginners"
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": "ai_ethics_001",
+      "question_type": "multiple_choice",
+      "question": "An AI-powered hiring tool is designed to screen job applicants based on previous successful hires. However, the AI tool favors candidates similar to past hires because it was trained on past hiring patterns that lacked diversity. What ethical risk does this scenario highlight?",
+      "options": [
+        "Misuse of personal data",
+        "Limited data security",
+        "Privacy violation",
+        "Lack of fairness"
+      ],
+      "correct_answer": "Lack of fairness",
+      "topic": "Bias and Fairness",
+      "learning_goal": "Understand how biased training data can lead to unfair AI decision-making.",
+      "common_wrong_answers": [
+        "Privacy violation",
+        "Misuse of personal data",
+        "Limited data security"
+      ]
+    },
+    {
+      "id": "ai_ethics_002",
+      "question_type": "multiple_choice",
+      "question": "A company launches an AI-powered resume screening tool to help with hiring. However, the tool consistently favors candidates from certain universities, despite efforts to provide balanced training data. What ethical concept is most relevant in addressing this issue?",
+      "options": [
+        "Providing transparency",
+        "Protecting intellectual property",
+        "Managing bias",
+        "Safeguarding privacy"
+      ],
+      "correct_answer": "Managing bias",
+      "topic": "Bias Mitigation",
+      "learning_goal": "Recognize the importance of detecting and managing bias in AI systems.",
+      "common_wrong_answers": [
+        "Providing transparency",
+        "Safeguarding privacy",
+        "Protecting intellectual property"
+      ]
+    },
+    {
+      "id": "ai_ethics_003",
+      "question_type": "multiple_choice",
+      "question": "A company develops an AI-powered hiring platform and the tool is trained on diverse demographic data to minimize bias. The platform is also regularly tested to promote equitable treatment across all candidates. Which ethical pillar does this scenario best demonstrate?",
+      "options": [
+        "Transparency",
+        "Accountability",
+        "Fairness",
+        "Privacy"
+      ],
+      "correct_answer": "Fairness",
+      "topic": "Ethical AI Principles",
+      "learning_goal": "Understand how fairness is upheld through diverse data and regular evaluation.",
+      "common_wrong_answers": [
+        "Transparency",
+        "Accountability",
+        "Privacy"
+      ]
+    },
+    {
+      "id": "ai_ethics_004",
+      "question_type": "multiple_choice",
+      "question": "A social media platform uses AI to moderate content but does not disclose how its algorithm filters posts. Users begin to question whether the platform is suppressing certain viewpoints unfairly. What ethical concept should the company prioritize to address this concern?",
+      "options": [
+        "Preventing harmful content",
+        "Providing transparency",
+        "Managing bias",
+        "Reducing inaccurate information"
+      ],
+      "correct_answer": "Providing transparency",
+      "topic": "Transparency",
+      "learning_goal": "Understand the role of transparency in building trust in AI systems.",
+      "common_wrong_answers": [
+        "Managing bias",
+        "Preventing harmful content",
+        "Reducing inaccurate information"
+      ]
+    },
+    {
+      "id": "ai_ethics_005",
+      "question_type": "multiple_choice",
+      "question": "A company is developing an AI chatbot to assist customers with financial inquiries. To improve accuracy, the chatbot is trained using actual customer conversations. During a live session, the chatbot references specific details from another customer’s past inquiry, suggesting that the data was not properly anonymized or protected. What ethical risk arises from using real customer data as AI training inputs?",
+      "options": [
+        "Lack of transparency",
+        "Lack of fairness",
+        "Data privacy violation",
+        "Dataset imbalance"
+      ],
+      "correct_answer": "Data privacy violation",
+      "topic": "Privacy and Data Protection",
+      "learning_goal": "Understand the privacy risks associated with using real customer data in AI systems.",
+      "common_wrong_answers": [
+        "Lack of fairness",
+        "Dataset imbalance",
+        "Lack of transparency"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "world_id": "fantasy",
+  "description": "This world focuses on Text to Speech (TTS) systems, exploring voice quality, expressiveness, pronunciation accuracy, and API usage through real-world client scenarios.",
+  "lore": [
+    "This world introduces learners to the fundamentals of Text-to-Speech systems.",
+    "Students explore how voice expressiveness impacts user perception.",
+    "Pronunciation accuracy and configuration play a key role in real-world TTS deployments.",
+    "API usage and security are critical when integrating TTS into applications."
+  ],
+  "npcs": {
+    "zaldric": {
+      "role": "The Mad Wizard",
+      "personality": "Obsessed with voice alchemy but prone to bouts of madness. He speaks in riddles about mystical text-to-speech rituals.",
+      "voiceId": "oR4uRy4fHDUGGISL0Rev",
+      "systemPrompt": "You are Zaldric, a mad wizard obsessed with 'Voice Alchemy' (Text-to-Speech). You are helping a student learn how to turn letters into human speech. Your personality is erratic, eccentric, and you speak with an ancient, mystical vocabulary. However, you provide clear technical explanations when asked. Keep responses concise but flavorful.",
+      "rules": [
+        "Use mystical metaphors for technical concepts",
+        "Explain things clearly but with a wizardly flavor",
+        "Refer to ElevenLabs as 'The Deep Forge of Voices'",
+        "Keep responses under 3 sentences if possible"
+      ],
+      "dialogueOptions": [
+        "Master Zaldric, how do we enchant text into speech?",
+        "What is the secret of the Voice Alchemy?",
+        "Tell me of the Deep Forge of Voices.",
+        "How do we make a voice more expressive?"
+      ],
+      "thinkingMessages": [
+        "By the bubbling cauldron, let me consult the ancient scrolls...",
+        "The spirits of the Deep Forge are whispering the answer...",
+        "One moment, the ink is dry but the logic is wet...",
+        "Mixing a potion of knowledge... stay back!"
+      ]
+    }
+  },
+  "questions": [
+    {
+      "id": "tts_001",
+      "question_type": "multiple_choice",
+      "question": "When you shared the digital voice output with your client, they raised an issue. What could be the possible issue basis of their requirement?",
+      "options": [
+        "The number 7 is not pronounced correctly. [Pick up: Emberstone Shard]",
+        "The speed is too fast. [Pick up: Cinder Ash Vial]",
+        "The voice is not expressive. [Pick up: Heart of the Volcano]",
+        "The output is not in the set language. [Pick up: Lava Serpent Fang]"
+      ],
+      "correct_answer": "The voice is not expressive. [Pick up: Heart of the Volcano]",
+      "topic": "Voice Quality",
+      "learning_goal": "Understand how expressiveness affects perceived quality in TTS systems.",
+      "common_wrong_answers": [
+        "The speed is too fast.",
+        "The number 7 is not pronounced correctly.",
+        "The output is not in the set language."
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_002",
+      "question_type": "multiple_choice",
+      "question": "The client feels that the default digital voice does not meet their requirement for an expressive human-like voice. How can you address this issue?",
+      "options": [
+        "Try again. If it doesn’t work, accept it as is. [Pick up: Sulfur Bloom]",
+        "Select an expressive neural voice available in the IBM Watson Text to Speech system. [Pick up: Molten Basilisk Scale]",
+        "Record human voice. [Pick up: Charred Obsidian Fragment]",
+        "Select another voice. [Pick up: Ashen Phoenix Feather]"
+      ],
+      "correct_answer": "Select an expressive neural voice available in the IBM Watson Text to Speech system. [Pick up: Molten Basilisk Scale]",
+      "topic": "Neural Voices",
+      "learning_goal": "Learn how expressive neural voices improve naturalness in TTS systems.",
+      "common_wrong_answers": [
+        "Record human voice.",
+        "Select another voice.",
+        "Try again. If it doesn’t work, accept it as is."
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_003",
+      "question_type": "multiple_choice",
+      "question": "What are some common issues developers may face when generating voice using a text to speech system? Select the two that apply.",
+      "options": [
+        "It takes time to generate the digital voice output. [Pick up: Glowcap Mushroom]",
+        "The length of pauses leads to an adverse impact on the flow. [Pick up: Whispering Moss]",
+        "The digital voice output sounds robotic or monotonous. [Pick up: Hollow Dryad Bark]",
+        "The digital voice output gets created into smaller files. [Pick up: River Spirit Pebble]"
+      ],
+      "correct_answer": [
+        "The length of pauses leads to an adverse impact on the flow. [Pick up: Whispering Moss]",
+        "The digital voice output sounds robotic or monotonous. [Pick up: Hollow Dryad Bark]"
+      ],
+      "topic": "TTS Limitations",
+      "learning_goal": "Identify common quality challenges in TTS-generated audio.",
+      "common_wrong_answers": [
+        "It takes time to generate the digital voice output.",
+        "The digital voice output gets created into smaller files."
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_004",
+      "question_type": "multiple_choice",
+      "question": "You have implemented a TTS system in a mobile app for reading out news articles. However, users have reported that some words and names are mispronounced, disrupting their listening experience",
+      "options": [
+        "Adjust the speed and pitch of the TTS output. [Pick up: Shadow Fern Sprig]",
+        "Get the audio recorded by a professional voice-over artist. [Pick up: Night Owl Talon]",
+        "Increase the volume of the TTS output. [Pick up: Spiritwood Acorn]",
+        "Update the phonetic database to include correct pronunciations for commonly mispronounced words. [Pick up: Moonlit Spider Silk]"
+      ],
+      "correct_answer": "Update the phonetic database to include correct pronunciations for commonly mispronounced words. [Pick up: Moonlit Spider Silk]",
+      "topic": "Pronunciation Accuracy",
+      "learning_goal": "Understand how phonetic dictionaries improve pronunciation in TTS systems.",
+      "common_wrong_answers": [
+        "Adjust the speed and pitch of the TTS output.",
+        "Increase the volume of the TTS output.",
+        "Get the audio recorded by a professional voice-over artist."
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_005",
+      "question_type": "multiple_choice",
+      "question": "Which of the following values can a user edit in the CURL command to generate a customized digital voice output?",
+      "options": [
+        "Voice artist [Pick up: Stardust Petal]",
+        "File location [Pick up: Prism Lily Stem]",
+        "Text [Pick up: Crystal Dew Drop]",
+        "File type [Pick up: Thornvine Loop]"
+      ],
+      "correct_answer": "Voice artist [Pick up: Stardust Petal]",
+      "topic": "TTS Configuration",
+      "learning_goal": "Learn which parameters affect voice customization in TTS APIs.",
+      "common_wrong_answers": [
+        "Text",
+        "File type",
+        "File location"
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_006",
+      "question_type": "multiple_choice",
+      "question": "You are configuring IBM Watson Text to Speech to generate an audio file for promotional video script. The client wants the audio to be in a specific voice that matches their brand personality.",
+      "options": [
+        "Modify the URL in the CURL command. [Pick up: Timeblossom Seed]",
+        "Replace the default voice in the CURL command with the desired voice option. [Pick up: Golden Nectar Orb]",
+        "Adjust the volume settings in the CURL command. [Pick up: Enchanted Rose Thorn]",
+        "Change the API key in the CURL command. [Pick up: Glasswing Butterfly Wing]"
+      ],
+      "correct_answer": "Replace the default voice in the CURL command with the desired voice option. [Pick up: Golden Nectar Orb]",
+      "topic": "Voice Selection",
+      "learning_goal": "Understand how voice selection works in TTS API requests.",
+      "common_wrong_answers": [
+        "Modify the URL in the CURL command.",
+        "Change the API key in the CURL command.",
+        "Adjust the volume settings in the CURL command."
+      ],
+      "attempts": 0
+    },
+    {
+      "id": "tts_007",
+      "question_type": "multiple_choice",
+      "question": "What is an API key?",
+      "options": [
+        "A reusable code to access a service in an app or website [Pick up: Enchanted Wheat Bundle]",
+        "A unique code that gives access to use certain features or services in an app or website [Pick up: Runic Pumpkin Core]",
+        "A link that hosts the text to speech service [Pick up: Silver Hen Egg]",
+        "A link that allows data exchange between a device and a server [Pick up: Sapphire Milk Bottle]"
+      ],
+      "correct_answer": "A unique code that gives access to use certain features or services in an app or website [Pick up: Runic Pumpkin Core]",
+      "topic": "API Security",
+      "learning_goal": "Understand the role of API keys in securing access to services.",
+      "common_wrong_answers": [
+        "A reusable code to access a service in an app or website",
+        "A link that allows data exchange between a device and a server",
+        "A link that hosts the text to speech service"
+      ],
+      "attempts": 0
+    }
+  ]
+}
