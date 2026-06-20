@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb184dd38e35214b97e53b268a5b88a, type: 3}
+  m_Name: Station 1
+  m_EditorClassIdentifier: Assembly-CSharp::FantasyStationConfig
+  stationID: S1
+  question: When you shared the digital voice output with your client, they raised
+    an issue. What could be the possible issue basis of their requirement?
+  answers:
+  - answerText: The number 7 is not pronounced correctly.
+    ingredientID: S1 1
+  - answerText: The speed is too fast.
+    ingredientID: S1 2
+  - answerText: The voice is not expressive.
+    ingredientID: S1 3
+  - answerText: The output is not in the set language.
+    ingredientID: S1 4
+  correctIngredientIDs:
+  - S1 3
