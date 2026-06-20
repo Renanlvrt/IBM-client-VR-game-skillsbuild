@@ -22,7 +22,7 @@
   <a href="#troubleshooting">Troubleshooting</a>
 </p>
 
-<h2 id="in_action">📸 IBM SkillsBuild VR in action</h2>
+<h2 id="in_action">IBM SkillsBuild VR in action</h2>
 
 <p align="center">
   <img src="./docs/image1.jpg" alt="Overview of the virtual environment" width="800" />
@@ -38,7 +38,7 @@
 
 <hr>
 
-<h2 id="what_you_get">✨ What You Get</h2>
+<h2 id="what_you_get">What You Get</h2>
 
 <ul>
   <li>Drop in VR educational experience built on OpenXR for Meta Quest and PC VR.</li>
@@ -50,7 +50,7 @@
   <li>Event driven decoupled Unity architecture designed for scalability and multiplayer expansion.</li>
 </ul>
 
-<h2 id="introduction">🚀 1. Introduction & Project Summary</h2>
+<h2 id="introduction">1. Introduction & Project Summary</h2>
 
 <p>This project is an immersive educational VR game built in Unity that combines interactive quiz based learning with AI powered tutoring within a thematic fantasy world. The project was motivated by the challenge of making complex topics in AI ethics and text to speech technology accessible and engaging for university learners. Research consistently demonstrates that immersive VR environments improve motivation, knowledge retention, and learning outcomes over conventional methods, with experiential and constructivist learning identified as the theoretical foundations most suited to VR based instruction. Gamification further strengthens engagement: game mechanics such as immediate feedback, challenge progression, and rewards measurably increase soft skill development in e learning contexts.</p>
 
@@ -58,7 +58,7 @@
 
 <p>The client is IBM, who commissioned the tool to teach learners about key AI concepts through the IBM SkillsBuild platform. The primary goals are to deliver an engaging gamified learning experience that improves retention over traditional training, and to integrate real time AI powered personalised feedback that adapts to each learner’s mistakes.</p>
 
-<h2 id="architecture">🏗️ 2. Technical Architecture</h2>
+<h2 id="architecture">2. Technical Architecture</h2>
 
 <h3>2.1 Source Materials</h3>
 <p>The following libraries, tools, and resources formed the technical foundation of the project:</p>
@@ -106,7 +106,7 @@
   <li><b>Coroutine State Machine:</b> RobotIntroController manages the tutorial sequence using an enum and chained coroutines, adapting to player driven transitions.</li>
 </ul>
 
-<h2 id="usability">🎨 3. Usability and User Experience</h2>
+<h2 id="usability">3. Usability and User Experience</h2>
 <p>Usability in VR presents distinct challenges compared to conventional applications: screen space UI elements cause discomfort when fixed to the player’s view, and interaction paradigms from desktop or mobile contexts do not translate naturally to head mounted displays. The design decisions below address these challenges directly.</p>
 
 <ul>
@@ -118,7 +118,7 @@
   <li><b>Smooth transitions:</b> Station entry and exit uses a fade to black transition rendered on a sphere surrounding the player camera, maintaining stereoscopic depth perception.</li>
 </ul>
 
-<h2 id="quick_start">⚙️ 4. System Access and Setup</h2>
+<h2 id="quick_start">4. System Access and Setup</h2>
 
 <h3>Requirements</h3>
 <ul>
@@ -141,7 +141,7 @@
 
 <p><b>Running in VR Mode:</b> Enable developer mode on the Meta Quest headset. Connect the headset via USB using Quest Link, or enable Air Link wirelessly. In Unity, navigate to Project Settings, XR Plug in Management and ensure OpenXR is enabled for the PC platform. Press Play in the Unity Editor to launch directly on the connected headset.</p>
 
-<h2 id="requirements">📊 5. Behavioural Requirements Status</h2>
+<h2 id="requirements">5. Behavioural Requirements Status</h2>
 
 <p>The following highlights the implementation status of key behavioural requirements.</p>
 
@@ -168,7 +168,7 @@
   </tr>
 </table>
 
-<h2 id="troubleshooting">🔧 6. Troubleshooting</h2>
+<h2 id="troubleshooting">6. Troubleshooting</h2>
 
 <table>
   <tr>
@@ -205,7 +205,7 @@
   </tr>
 </table>
 
-<h2 id="maintenance">⚙️ 7. Maintenance and Implications</h2>
+<h2 id="maintenance">7. Maintenance and Implications</h2>
 
 <h3>7.1 System Maintenance</h3>
 <ul>
@@ -223,7 +223,7 @@
   <li><b>Persistent Progress System:</b> Using JSON based save files for quiz progress, amulets, and world completion to allow players to resume their progress seamlessly across different VR sessions.</li>
 </ul>
 
-<h2 id="team">👥 8. The Team</h2>
+<h2 id="team">8. The Team</h2>
 
 <p>
   <b>Erica Da Silva</b> &bull; <b>Renan Sho Marie</b> &bull; <b>Petru Iustin</b> &bull; <b>Ruixi Yang</b> &bull; <b>Palak Shah</b><br>
