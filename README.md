@@ -2,7 +2,7 @@
 
 <p align="center">
   <strong>Immersive Active Learning Prototype</strong><br>
-  <em>A cutting edge software engineering prototype for COMP2201</em>
+  <em>A cutting edge software engineering prototype for IBM</em>
 </p>
 
 <p align="center">
